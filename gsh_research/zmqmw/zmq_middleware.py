@@ -48,6 +48,8 @@ class Subscriber:
         self.host = host
         self._running = False
         self.t = None
+        self.id = None
+        self.callbacks = {} 
         log.info("In TestSubscriber init")
 
         self.ctx = zmq.Context()
@@ -58,26 +60,28 @@ class Subscriber:
     def _register(self, t):
         print("subscriptions", self.subscriptions)
         if t not in self.subscriptions:
-            print("adding ''")
+            print(f"adding {t}")
             self.subscriptions.append(t)
             self.socket.setsockopt_string(zmq.SUBSCRIBE, t)
 
-    def _start(self, fn):
+    def _start(self):
         self.running = True
         self.socket.connect(f"tcp://{self.host}:5262")
+        print(f"cb = {self.callbacks}")
         while self.running:
             try:
-                msg = self.socket.recv(zmq.DONTWAIT)
-                fn(msg)
+                topic , *body = self.socket.recv_string(zmq.DONTWAIT).split(":")
+                if topic in self.callbacks:
+                    for cb in self.callbacks[topic]:
+                        cb(topic, body)
             except zmq.Again:
                 pass
 
-    def register_sub(self, topic="", fn=print):
+    def register_sub(self, topic):
         log.info(f"register_sub: topic: '{topic}'")
         self._register(topic)
-        log.info("start...")
         if not isinstance(self.t, threading.Thread):
-            self.t = threading.Thread(target=self._start, args=(fn,))
+            self.t = threading.Thread(target=self._start)
             self.t.start()
          
     def unregister_sub(self, topic):
@@ -94,6 +98,12 @@ class Subscriber:
         self.running = False
         time.sleep(0.5)
         self.ctx.destroy()
+
+    def notify(self, topic, fn):
+        if topic not in self.callbacks:
+            self.callbacks[topic] = [fn]
+        else:
+            self.callbacks[topic].append(fn)
 
     @property
     def running(self):

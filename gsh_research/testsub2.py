@@ -2,13 +2,13 @@ import logging
 import argparse
 import zmqmw as zmw
 import time
+from uuid import uuid4
 
 logging.basicConfig()
 log = logging.getLogger('distsys')
 log.setLevel(logging.INFO)
 
-def resp_printer(s):
-    topic, body = str(s, encoding='utf-8').split(":")
+def resp_printer(topic, body):
     print(f"topic:{topic}, body:{body}")
 
 if __name__ == "__main__":
@@ -18,10 +18,23 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     sub = zmw.Subscriber()
-    sub.register_sub(args.topic, resp_printer)
 
-    #sub.register_sub("kathleen")
-    #sub.unregister_sub("sam")
+    sub.notify("sam", resp_printer)
+    sub.register_sub(args.topic)
+
+    time.sleep(3) 
+    print("subscribing to 'kathleen' (no callback)") 
+    sub.register_sub("kathleen")
+
+    time.sleep(3)
+    print("adding callback")
+    sub.notify("kathleen", resp_printer)
+
+    time.sleep(3) 
+    print("unregistering 'sam'")
+    sub.unregister_sub("sam")
+
+    sub.notify("kathleen", lambda x,y: print('second', y, x))
 
     if args.timeout != 0:
         try:
@@ -29,3 +42,4 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             pass
     sub.stop()
+
