@@ -1,44 +1,45 @@
-from typing import Callable
-import zmq
 import logging
 import argparse
-from random import randint
-from time import sleep
+import zmqmw as zmw
+import time
 from uuid import uuid4
-from threading import Thread
 
 logging.basicConfig()
 log = logging.getLogger('distsys')
 log.setLevel(logging.INFO)
 
-class TestSubscriber:
-    def __init__(self, identifier=None, listen_count=0, topic="") -> None:
-        self.id = identifier
-        self.topic = topic
-        log.info("In TestSubscriber init")
-        self.ctx = zmq.Context()
-        self.count = -1 if listen_count == 0 else listen_count
-
-    def start(self):
-        s = self.ctx.socket(zmq.SUB)
-        s.connect("tcp://localhost:5262")
-        s.setsockopt_string(zmq.SUBSCRIBE, self.topic)
-
-        log.info(f"thread:{self.id} waiting for message")
-
-        while self.count != 0:
-            log.info(f"{self.id} received: {s.recv()}")
-            self.count -=1 
+def resp_printer(topic, body):
+    print(f"topic:{topic}, body:{body}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("topic", help="name of your topic.", default="")
-    parser.add_argument("count", help="Number of messages to receive (0 = infinite)", type=int, default=100)
-    parser.add_argument("threads", help="number of threads to do this.", type=int, default=1)
+    parser.add_argument("topic", help="name of your topic.", default="", nargs='?')
+    parser.add_argument("timeout", help="seconds before process timeout", nargs='?', default=10, type=int)
     args = parser.parse_args()
 
-    subscribers = [TestSubscriber(identifier=str(uuid4()), listen_count=args.count, topic=args.topic) for i in range(args.threads)]
-    for s in subscribers:
-        t = Thread(target=s.start)
-        t.start()
+    sub = zmw.Subscriber()
+
+    sub.notify("sam", resp_printer)
+    sub.register_sub(args.topic)
+
+    time.sleep(3) 
+    print("subscribing to 'kathleen' (no callback)") 
+    sub.register_sub("kathleen")
+
+    time.sleep(3)
+    print("adding callback")
+    sub.notify("kathleen", resp_printer)
+
+    time.sleep(3) 
+    print("unregistering 'sam'")
+    sub.unregister_sub("sam")
+
+    sub.notify("kathleen", lambda x,y: print('second', y, x))
+
+    if args.timeout != 0:
+        try:
+            time.sleep(args.timeout)
+        except KeyboardInterrupt:
+            pass
+    sub.stop()
 
