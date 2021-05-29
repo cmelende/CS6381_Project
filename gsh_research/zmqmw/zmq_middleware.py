@@ -3,6 +3,7 @@ import zmq
 import logging
 from uuid import uuid4
 import time
+from enum import Enum
 
 logging.basicConfig()
 log = logging.getLogger('distsys')
@@ -17,6 +18,9 @@ class ProxyBroker:
         self.context = zmq.Context()
         self.subscriber = self._subscriber()
         self.publisher = self._publisher()
+        log.info("\tProxy Broker Started...")
+        log.info(f"\tListening for publisher on port: {p_port}")
+        log.info(f"\tListening for subscribers on port: {s_port}")
 
     def _subscriber(self):
         log.info("initializing subscriber")
@@ -36,19 +40,27 @@ class ProxyBroker:
         except KeyboardInterrupt:
             self.context.destroy()
 
+class Address:
+    def __init__(self, address, port):
+        self.address = address
+        self.port = port
 
-class RegistrationHandler:
-    def __init__(self) -> None:
-        self.subscribers = []
-        self.publishers = []
-    
+class Broker(Address):
+    class BrokerType(Enum):
+        proxy = 0
+        notifier = 1
+
+    def __init__(self, address, port, brokertype: BrokerType):
+        super().__init__(address, port)
+        self.brokertype = brokertype 
+
 class Subscriber:
-    def __init__(self, identifier=None, host="localhost") -> None:
+    def __init__(self, identifier=None, host="localhost", port=5263) -> None:
         self.id = identifier if identifier is not None else str(uuid4())
         self.host = host
+        self.port = port
         self._running = False
         self.t = None
-        self.id = None
         self.callbacks = {} 
         log.info("In TestSubscriber init")
 
@@ -58,16 +70,13 @@ class Subscriber:
         self.subscriptions = []
 
     def _register(self, t):
-        print("subscriptions", self.subscriptions)
         if t not in self.subscriptions:
-            print(f"adding {t}")
             self.subscriptions.append(t)
             self.socket.setsockopt_string(zmq.SUBSCRIBE, t)
 
     def _start(self):
         self.running = True
-        self.socket.connect(f"tcp://{self.host}:5262")
-        print(f"cb = {self.callbacks}")
+        self.socket.connect(f"tcp://{self.host}:{self.port}")
         while self.running:
             try:
                 topic , *body = self.socket.recv_string(zmq.DONTWAIT).split(":")
@@ -96,10 +105,10 @@ class Subscriber:
     
     def stop(self):
         self.running = False
-        time.sleep(0.5)
+        self.t.join()
         self.ctx.destroy()
 
-    def notify(self, topic, fn):
+    def register_notify(self, topic, fn):
         if topic not in self.callbacks:
             self.callbacks[topic] = [fn]
         else:
@@ -114,8 +123,48 @@ class Subscriber:
         self._running = val
 
 class Publisher:
-    def __init__(self) -> None:
-        pass 
+    def __init__(self, address: Address = None, broker: Broker = None) -> None:
+        if not address and not broker:
+            raise ValueError("Must specify broker or address")
+
+        self.topics = []
+        self.ctx = zmq.Context()
+        self.socket = self.ctx.socket(zmq.PUB)
+
+        if broker is not None:
+            log.info(f"Publisher sending to broker {broker.address}:{broker.port}")
+            self.socket.connect(f"tcp://{broker.address}:{broker.port}")
+        else:
+            log.info("Publisher listening without broker.")
+            self.socket.bind(f"tcp://{address.address}:{address.port}")
+        self._running = True
+
+    def register_topic(self, topic):
+        if topic not in self.topics:
+            log.info(f"Topic {topic} registered.")
+            self.topics.append(topic)
+        else:
+            log.warn(f"Topic already added.") 
+            return 
+
+    def unregister_topic(self, topic):
+        if topic in self.topics:
+            self.topics.remove(topic)
+
+    def get_registered_topics(self):
+        return self.topics
     
-    def register_pub(self):
-        pass 
+    def publish(self, topic, data):
+        if topic in self.topics:
+            self.socket.send_string(":".join([topic, data]))
+        else:
+            log.error("This is an unregistered topic for this publisher.")
+
+    @property
+    def running(self):
+        return self._running
+    
+    @running.setter
+    def running(self, newval):
+        if isinstance(newval, bool):
+            self.running = newval
