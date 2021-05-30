@@ -43,8 +43,9 @@ class ProxyBroker:
             self.context.destroy()
 
 class NotifierBroker:
-    def __init__(self) -> None:
+    def __init__(self, port=5263) -> None:
         self.publishers = {} 
+        self.port = port
         self.context = zmq.Context()
     
     def register_publisher(self, ip, port, topics=[]):
@@ -60,7 +61,7 @@ class NotifierBroker:
     
     def start(self):
         self.reply = self.context.socket(zmq.REP)
-        self.reply.bind("tcp://*:5263")
+        self.reply.bind(f"tcp://*:{self.port}")
         while True:
             msg = str(self.reply.recv(), encoding='utf-8')
             log.info(f"msg = {msg}")
@@ -71,6 +72,7 @@ class NotifierBroker:
                 j = json.loads(j)
                 self.register_publisher(ip=j['ip'], port=j['port'], topics=j['topics'] or [])
                 self.reply.send_json(j)
+
 class Address:
     def __init__(self, address, port):
         self.address = address
