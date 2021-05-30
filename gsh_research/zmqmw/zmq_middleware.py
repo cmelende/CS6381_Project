@@ -4,6 +4,8 @@ import logging
 from uuid import uuid4
 import time
 from enum import Enum
+from hashlib import sha1
+import json
 
 logging.basicConfig()
 log = logging.getLogger('distsys')
@@ -40,6 +42,36 @@ class ProxyBroker:
         except KeyboardInterrupt:
             self.context.destroy()
 
+class NotifierBroker:
+    def __init__(self) -> None:
+        self.publishers = {} 
+        self.context = zmq.Context()
+    
+    def register_publisher(self, ip, port, topics=[]):
+        self.id = sha1(bytes(f"{ip}:{port}", encoding='utf-8')).hexdigest()
+        if self.id not in self.publishers:
+            self.publishers[self.id] = {
+                "ip": ip,
+                "port": port,
+                "topics": topics
+            }
+       
+    def get_publishers(self):
+        return json.dumps(self.publishers, indent=4)
+    
+    def start(self):
+        self.reply = self.context.socket(zmq.REP)
+        self.reply.bind("tcp://*:5263")
+        while True:
+            msg = str(self.reply.recv(), encoding='utf-8')
+            log.info(f"msg = {msg}, publishers = {self.get_publishers()}")
+            if msg == "request":
+                self.reply.send_string(self.get_publishers())
+            elif msg.startswith("register$"):
+                j = msg.split("$")[1]
+                j = json.loads(j)
+                self.register_publisher(ip=j['ip'], port=j['port'], topics=j['topics'] or [])
+                self.reply.send_json(j)
 class Address:
     def __init__(self, address, port):
         self.address = address
@@ -113,6 +145,14 @@ class Subscriber:
             self.callbacks[topic] = [fn]
         else:
             self.callbacks[topic].append(fn)
+    
+    @staticmethod
+    def get_publishers(broker):
+        ctx = zmq.Context.instance()
+        s = ctx.socket(zmq.REQ)
+        s.connect(f"tcp://{broker.address}:{broker.port}")
+        s.send_string("request")
+        return(s.recv())
 
     @property
     def running(self):
@@ -159,6 +199,22 @@ class Publisher:
             self.socket.send_string(":".join([topic, data]))
         else:
             log.error("This is an unregistered topic for this publisher.")
+    
+    @staticmethod
+    def register_publisher(broker: Broker, ip, port, topics=[]):
+        if broker.brokertype == Broker.BrokerType.notifier:
+            ctx = zmq.Context.instance()
+            s = ctx.socket(zmq.REQ)
+            s.connect(f"tcp://{broker.address}:{broker.port}")
+            reg_body = {
+                "ip": ip,
+                "port": port,
+                "topics": topics
+            }
+            s.send_string(f'register${json.dumps(reg_body)}')
+            resp = s.recv()
+            log.info(f"registration response:{resp}")
+            return resp
 
     @property
     def running(self):
