@@ -142,6 +142,7 @@ class Subscriber:
         self.ctx.destroy()
 
     def register_notify(self, topic, fn):
+        log.info(f"subscriber: registered callback function {fn} for topic {topic}")
         if topic not in self.callbacks:
             self.callbacks[topic] = [fn]
         else:
@@ -176,7 +177,6 @@ class Publisher:
             log.info(f"Publisher sending to broker {broker.address}:{broker.port}")
             self.socket.connect(f"tcp://{broker.address}:{broker.port}")
         else:
-            log.info("Publisher listening without broker.")
             self.socket.bind(f"tcp://{address.address}:{address.port}")
         self._running = True
 
