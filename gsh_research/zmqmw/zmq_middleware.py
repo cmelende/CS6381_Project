@@ -49,12 +49,11 @@ class NotifierBroker:
     
     def register_publisher(self, ip, port, topics=[]):
         self.id = sha1(bytes(f"{ip}:{port}", encoding='utf-8')).hexdigest()
-        if self.id not in self.publishers:
-            self.publishers[self.id] = {
-                "ip": ip,
-                "port": port,
-                "topics": topics
-            }
+        self.publishers[self.id] = {
+            "ip": ip,
+            "port": port,
+            "topics": topics
+        }
        
     def get_publishers(self):
         return json.dumps(self.publishers, indent=4)
@@ -64,7 +63,7 @@ class NotifierBroker:
         self.reply.bind("tcp://*:5263")
         while True:
             msg = str(self.reply.recv(), encoding='utf-8')
-            log.info(f"msg = {msg}, publishers = {self.get_publishers()}")
+            log.info(f"msg = {msg}")
             if msg == "request":
                 self.reply.send_string(self.get_publishers())
             elif msg.startswith("register$"):
@@ -212,7 +211,7 @@ class Publisher:
                 "topics": topics
             }
             s.send_string(f'register${json.dumps(reg_body)}')
-            resp = s.recv()
+            resp = str(s.recv(), encoding='utf-8')
             log.info(f"registration response:{resp}")
             return resp
 
