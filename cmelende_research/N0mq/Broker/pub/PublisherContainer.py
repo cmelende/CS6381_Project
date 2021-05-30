@@ -1,7 +1,7 @@
 import zmq
 
-from N0mq.Broker.pub.Publisher import Publisher
-from N0mq.Broker.pub.TopicsPublisherPair import TopicsPublisherPair
+from cmelende_research.N0mq.Broker.pub.Publisher import Publisher
+from cmelende_research.N0mq.Broker.pub.TopicsPublisherPair import TopicsPublisherPair
 
 
 class PublisherContainer:

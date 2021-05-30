@@ -1,7 +1,7 @@
 import threading
 from datetime import datetime
 
-from N0mq.Broker.handler.MessageHandlerBase import MessageHandlerBase
+from cmelende_research.N0mq.Broker.handler.MessageHandlerBase import MessageHandlerBase
 
 
 class TodaysWeatherMessageHandler(MessageHandlerBase):

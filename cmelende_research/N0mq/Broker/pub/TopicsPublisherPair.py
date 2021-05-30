@@ -1,4 +1,4 @@
-from N0mq.Broker.pub.Publisher import Publisher
+from cmelende_research.N0mq.Broker.pub.Publisher import Publisher
 
 
 class TopicsPublisherPair:
