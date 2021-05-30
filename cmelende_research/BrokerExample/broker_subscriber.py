@@ -1,4 +1,4 @@
-from N0mq.Broker.sub.SubscriberContainer import SubscriberContainer
+from cmelende_research.N0mq.Broker.sub.SubscriberContainer import SubscriberContainer
 from handlers.SportsMessageHandler import SportsMessageHandler
 from handlers.SportsTopicHandler import SportsTopicMessageHandler
 

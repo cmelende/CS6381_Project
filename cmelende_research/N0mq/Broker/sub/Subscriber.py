@@ -1,7 +1,7 @@
 import zmq
 
-from N0mq.Broker.handler.MessageHandlerBase import MessageHandlerBase
-from N0mq.Broker.handler.NullMessageHandler import NullMessageHandler
+from cmelende_research.N0mq.Broker.handler.MessageHandlerBase import MessageHandlerBase
+from cmelende_research.N0mq.Broker.handler.NullMessageHandler import NullMessageHandler
 
 
 class Subscriber:
