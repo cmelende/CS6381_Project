@@ -1,7 +1,6 @@
 import zmq
-
-from cmelende_research.N0mq.Broker.handler.MessageHandlerBase import MessageHandlerBase
-from cmelende_research.N0mq.Broker.sub.Subscriber import Subscriber
+from N0mq.Broker.sub.Subscriber import Subscriber
+from N0mq.Broker.handler.MessageHandlerBase import MessageHandlerBase
 
 
 class SubscriberContainer:
@@ -25,7 +24,7 @@ class SubscriberContainer:
 
     def listen(self) -> None:
         for subscriber in self._subscribers:
-            subscriber.receive()
+            subscriber.start()
 
     def close(self) -> None:
         for sub in self._subscribers:

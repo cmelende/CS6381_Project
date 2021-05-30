@@ -1,11 +1,14 @@
+from threading import Thread
+
 import zmq
 
-from cmelende_research.N0mq.Broker.handler.MessageHandlerBase import MessageHandlerBase
-from cmelende_research.N0mq.Broker.handler.NullMessageHandler import NullMessageHandler
+from N0mq.Broker.handler.MessageHandlerBase import MessageHandlerBase
+from N0mq.Broker.handler.NullMessageHandler import NullMessageHandler
 
 
-class Subscriber:
+class Subscriber(Thread):
     def __init__(self, topic: str):
+        super().__init__()
         context = zmq.Context.instance()
         self._subscriber_socket = context.socket(zmq.SUB)
         self.Topic = topic
@@ -25,6 +28,9 @@ class Subscriber:
             msg = self._subscriber_socket.recv()
             if self._message_handler is not NullMessageHandler:
                 self._message_handler.handle_message(f'{msg}')
+
+    def run(self):
+        self.receive()
 
     def close(self):
         self._keep_running = False

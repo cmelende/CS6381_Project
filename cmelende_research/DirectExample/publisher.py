@@ -1,6 +1,5 @@
 from time import sleep
-
-from cmelende_research.N0mq.Broker.pub.Publisher import Publisher
+from N0mq.Broker.pub.Publisher import Publisher
 
 host = "127.0.0.1"
 pub_port = "5560"

@@ -1,4 +1,4 @@
-from cmelende_research.N0mq.Broker.handler.MessageHandlerBase import MessageHandlerBase
+from N0mq.Broker.handler.MessageHandlerBase import MessageHandlerBase
 
 
 class NullMessageHandler(MessageHandlerBase):

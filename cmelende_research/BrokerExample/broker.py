@@ -1,4 +1,4 @@
-from cmelende_research.N0mq.Broker.BrokerProxy import BrokerProxy
+from N0mq.Broker.BrokerProxy import BrokerProxy
 
 host = "127.0.0.1"
 xpub_port = "5559"

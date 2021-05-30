@@ -1,5 +1,5 @@
-from cmelende_research.DirectExample.MessageHandlers.TodaysWeatherMessageHandler import TodaysWeatherMessageHandler
-from cmelende_research.N0mq.Broker.sub.Subscriber import Subscriber
+from DirectExample.MessageHandlers.TodaysWeatherMessageHandler import TodaysWeatherMessageHandler
+from N0mq.Broker.sub.Subscriber import Subscriber
 
 host = "127.0.0.1"
 pub_port = "5560"
