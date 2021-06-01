@@ -15,7 +15,7 @@ class PublisherApp(App):
         strategy: PublisherStrategy
         if self._use_proxy:
             # todo: fix - cant handle multiple pubs since we only know about one port
-            strategy = PublisherProxyStrategy(self._app_options.Host, self._app_options.Port)
+            strategy = PublisherProxyStrategy(self._app_options.Host, self.__publisher_app_options.Port)
         else:
             strategy = PublisherNotifierStrategy()
         client = PublisherClient(strategy)

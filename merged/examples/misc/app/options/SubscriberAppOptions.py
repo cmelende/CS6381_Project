@@ -11,5 +11,6 @@ class SubscriberAppOptions(AppOptions):
                  topic_handlers: list[TopicHandlers],
                  logger: Logger):
 
-        super().__init__(host, port, argv, logger)
+        super().__init__(host, argv, logger)
+        self.Port = port
         self.TopicHandlers: list[TopicHandlers] = topic_handlers
