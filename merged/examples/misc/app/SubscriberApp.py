@@ -2,20 +2,21 @@ from merged.examples.misc.app.App import App, TClient
 from merged.examples.misc.app.options.SubscriberAppOptions import SubscriberAppOptions
 from merged.examples.misc.value_objects.TopicHandlers import TopicHandler
 from merged.implementations.notifier.SubscriberNotifierStrategy import SubscriberNotifierStrategy
-from merged.implementations.proxy.SubscriberProxyStrategy import SubscriberProxyStrategy
+from merged.implementations.proxy.subscriber.SubscriberProxyStrategy import SubscriberProxyStrategy
 from merged.middleware.adapter.SubscriberClient import SubscriberClient
 from merged.middleware.strategy.SubscriberStrategy import SubscriberStrategy
 
 
 class SubscriberApp(App):
+
     def __init__(self, app_options: SubscriberAppOptions):
         super().__init__(app_options)
         self.__subscriber_options = app_options
 
-    def run(self) -> TClient:
+    def __create_client(self) -> TClient:
         strategy: SubscriberStrategy()
         if self._use_proxy:
-            strategy = SubscriberProxyStrategy()
+            strategy = SubscriberProxyStrategy(self.__subscriber_options.Host, self.__subscriber_options.Port)
         else:
             strategy = SubscriberNotifierStrategy()
 
@@ -25,3 +26,7 @@ class SubscriberApp(App):
             client.subscribe(topic_handlers.Topic, topic_handlers.Handlers)
 
         return client
+
+    def create_client(self) -> TClient:
+        return self.__create_client()
+

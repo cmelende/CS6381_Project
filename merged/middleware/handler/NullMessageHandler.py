@@ -1,6 +1,6 @@
-from cmelende_research.N0mq.Broker.handler.MessageHandlerBase import MessageHandlerBase
+from merged.middleware.handler.MessageHandler import MessageHandler
 
 
-class NullMessageHandler(MessageHandlerBase):
+class NullMessageHandler(MessageHandler):
     def handle_message(self, value: str) -> None:
         pass

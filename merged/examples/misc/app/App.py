@@ -6,23 +6,22 @@ from typing import TypeVar, Generic
 from merged.examples.misc.app.options.AppOptions import AppOptions
 
 TClient = TypeVar("TClient")
+short_options = "f"
+long_options = ["flag="]
 
 
 class App(ABC, Generic[TClient]):
-
     def __init__(self, app_options: AppOptions):
         self._app_options = app_options
         self._use_proxy = True
         try:
-            opts, args = getopt.getopt(self._app_options.Argv,
-                                       self._app_options.ShortOptions,
-                                       self._app_options.LongOptions)
+            opts, args = getopt.getopt(self._app_options.Argv, short_options, long_options)
         except getopt.GetoptError:
             print("usage subscriber_one.py flags=")
             sys.exit(2)
 
         for opt, arg in opts:
-            if opt in ("-f", "flag"):
+            if opt in ("-f", "--flag"):
                 self._use_proxy = self.__use_proxy_client(arg)
             else:
                 print(f'ignoring flag {opt}')
@@ -38,5 +37,5 @@ class App(ABC, Generic[TClient]):
             sys.exit(2)
 
     @abstractmethod
-    def run(self) -> TClient:
+    def create_client(self) -> TClient:
         pass

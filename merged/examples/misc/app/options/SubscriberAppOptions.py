@@ -5,11 +5,11 @@ from merged.examples.misc.value_objects import TopicHandlers
 
 class SubscriberAppOptions(AppOptions):
     def __init__(self,
+                 host: str,
+                 port: str,
                  argv,
                  topic_handlers: list[TopicHandlers],
-                 short_options: str,
-                 long_options: list[str],
                  logger: Logger):
 
-        super().__init__(argv, short_options, long_options, logger)
+        super().__init__(host, port, argv, logger)
         self.TopicHandlers: list[TopicHandlers] = topic_handlers

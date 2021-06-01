@@ -14,3 +14,6 @@ class PublisherClient:
 
     def publish(self, topic: str, val: str) -> None:
         self._publisher_strategy.publish(topic, val)
+
+    def close(self):
+        self._publisher_strategy.close()

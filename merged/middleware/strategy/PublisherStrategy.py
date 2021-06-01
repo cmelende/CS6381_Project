@@ -10,3 +10,7 @@ class PublisherStrategy(ABC):
     @abstractmethod
     def publish(self, topic: str, value: str) -> None:
         pass
+
+    @abstractmethod
+    def close(self):
+        pass

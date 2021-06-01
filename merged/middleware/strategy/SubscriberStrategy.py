@@ -12,3 +12,11 @@ class SubscriberStrategy(ABC):
     @abstractmethod
     def unsubscribe(self, topic: str) -> None:
         pass
+
+    @abstractmethod
+    def listen(self) -> None:
+        pass
+
+    @abstractmethod
+    def close(self) -> None:
+        pass

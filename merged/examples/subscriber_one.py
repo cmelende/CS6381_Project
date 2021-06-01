@@ -1,17 +1,17 @@
 import sys
 
 from merged.examples.misc.app.App import App
-from merged.examples.misc.app.options.AppOptions import AppOptions
-from merged.examples.misc.logger.DateTimeConsoleLogger import DateTimeConsoleLogger
 from merged.examples.misc.app.SubscriberApp import SubscriberApp
-from merged.examples.misc.value_objects.TopicHandlers import TopicHandler
+from merged.examples.misc.app.options.SubscriberAppOptions import SubscriberAppOptions
 from merged.examples.misc.handlers.MoviesMessageHandler import MoviesMessageHandler
 from merged.examples.misc.handlers.NewsMessageHandler import NewsMessageHandler
 from merged.examples.misc.handlers.SportsMessageHandler import SportsMessageHandler
+from merged.examples.misc.logger.DateTimeConsoleLogger import DateTimeConsoleLogger
+from merged.examples.misc.value_objects.TopicHandlers import TopicHandler
 from merged.middleware.adapter.SubscriberClient import SubscriberClient
 
-short_options = "f"
-long_options = ["flag"]
+host = "127.0.0.1"
+port = "5560"
 topic_handlers = [
     TopicHandler("SPORTS", [SportsMessageHandler()]),
     TopicHandler("MOVIES", [MoviesMessageHandler()]),
@@ -20,10 +20,16 @@ topic_handlers = [
 
 
 def main(argv):
-    options = AppOptions(argv, short_options, long_options, DateTimeConsoleLogger())
+    options = SubscriberAppOptions(host, port, argv, topic_handlers, DateTimeConsoleLogger())
     subscriber_app: App[SubscriberClient] = SubscriberApp(options)
-    subscriber_app.run()
+    client: SubscriberClient = subscriber_app.create_client()
+
+    try:
+        client.listen()
+    except KeyboardInterrupt:
+        print("Closing down")
+        client.close()
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main(sys.argv[1:])
