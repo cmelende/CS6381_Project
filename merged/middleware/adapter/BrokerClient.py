@@ -1,4 +1,4 @@
-from merged.middleware.Strategy.BrokerStrategy import BrokerStrategy
+from Merged.Middleware.Strategy.BrokerStrategy import BrokerStrategy
 
 
 class BrokerClient:

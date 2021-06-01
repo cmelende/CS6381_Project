@@ -1,12 +1,9 @@
-from abc import ABC, abstractmethod
+from Merged.Middleware.Strategy.PublisherStrategy import PublisherStrategy
 
 
-class PublisherStrategyBase(ABC):
-
-    @abstractmethod
+class PublisherNotifierStrategy(PublisherStrategy):
     def register(self, topics: list[str]):
         pass
 
-    @abstractmethod
     def publish(self, topic: str, value: str) -> None:
         pass
