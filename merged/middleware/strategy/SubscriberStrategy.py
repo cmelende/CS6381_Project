@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from Merged.Middleware.Handler.MessageHandler import MessageHandler
+from merged.middleware.handler.MessageHandler import MessageHandler
 
 
 class SubscriberStrategy(ABC):

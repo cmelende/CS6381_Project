@@ -1,5 +1,5 @@
-from Merged.Middleware.Handler.MessageHandler import MessageHandler
-from Merged.Middleware.Strategy.SubscriberStrategy import SubscriberStrategy
+from merged.middleware.handler.MessageHandler import MessageHandler
+from merged.middleware.strategy.SubscriberStrategy import SubscriberStrategy
 
 
 class SubscriberNotifierStrategy(SubscriberStrategy):

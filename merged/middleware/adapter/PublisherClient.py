@@ -1,4 +1,4 @@
-from Merged.Middleware.Strategy.PublisherStrategy import PublisherStrategy
+from merged.middleware.strategy.PublisherStrategy import PublisherStrategy
 
 
 class PublisherClient:
