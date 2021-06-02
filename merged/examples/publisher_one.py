@@ -10,8 +10,9 @@ from merged.middleware.BrokerInfo import BrokerInfo
 from merged.middleware.PublisherInfo import PublisherInfo
 from merged.middleware.adapter.PublisherClient import PublisherClient
 
-broker_info = BrokerInfo("127.0.0.1", "5558")
-publisher_info = PublisherInfo("127.0.0.1", ["5559", "5560", "5561"])
+ports = list(map(str, range(5000, 5500)))
+broker_info = BrokerInfo("127.0.0.1", "5560")
+publisher_info = PublisherInfo("127.0.0.1", ports)
 publisher_topics: list[PublisherTopics] = [
     PublisherTopics(["SPORTS", "NEWS"]),
     PublisherTopics(["WEATHER", "POLITICS"])
