@@ -18,7 +18,8 @@ class PublisherApp(App):
                                               self.__publisher_app_options.Logger)
         else:
             strategy = PublisherNotifierStrategy(self.__publisher_app_options.BrokerInfo,
-                                                 self.__publisher_app_options.PublisherInfo)
+                                                 self.__publisher_app_options.PublisherInfo,
+                                                 self.__publisher_app_options.Logger)
 
         client = PublisherClient(strategy)
 

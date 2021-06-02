@@ -14,11 +14,13 @@ class SubscriberApp(App):
         self.__subscriber_options = app_options
 
     def __create_client(self) -> TClient:
-        strategy: SubscriberStrategy()
+        strategy: SubscriberStrategy
         if self._use_proxy:
-            strategy = SubscriberProxyStrategy(self.__subscriber_options.BrokerInfo)
+            strategy = SubscriberProxyStrategy(self.__subscriber_options.BrokerInfo,
+                                               self.__subscriber_options.Logger)
         else:
-            strategy = SubscriberNotifierStrategy(self.__subscriber_options.BrokerInfo)
+            strategy = SubscriberNotifierStrategy(self.__subscriber_options.BrokerInfo,
+                                                  self.__subscriber_options.Logger)
 
         client: SubscriberClient = SubscriberClient(strategy)
         topic_handlers: TopicHandler

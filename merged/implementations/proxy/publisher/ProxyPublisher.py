@@ -1,5 +1,4 @@
 import zmq
-from datetime import datetime
 
 
 class ProxyPublisher:
@@ -10,9 +9,7 @@ class ProxyPublisher:
         self._publish_socket.connect(f'tcp://{broker_address}:{broker_port}')
 
     def publish(self, topic: str, value: str) -> None:
-        msg = f'{topic} : {value}'
-        self._publish_socket.send_string(msg)
-        print(f'{datetime.now().strftime("%m/%d/%Y %H:%M:%S")} sent - {msg}')
+        self._publish_socket.send_string(f'{topic}:{value}')
 
     def close(self):
         self._publish_socket.close()

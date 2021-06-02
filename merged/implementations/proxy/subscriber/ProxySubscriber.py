@@ -7,13 +7,13 @@ class ProxySubscriber:
     def __init__(self, topic: str, handlers: list[MessageHandler]):
         context = zmq.Context().instance()
         self._subscriber_socket = context.socket(zmq.SUB)
-        self.__topic = topic
+        self.Topic = topic
         self._keep_running = True
         self.__message_handlers: list[MessageHandler] = handlers
 
     def connect(self, broker_address: str, broker_port: str):
         self._subscriber_socket.connect(f'tcp://{broker_address}:{broker_port}')
-        self._subscriber_socket.setsockopt_string(zmq.SUBSCRIBE, self.__topic)
+        self._subscriber_socket.setsockopt_string(zmq.SUBSCRIBE, self.Topic)
 
     def receive(self) -> None:
         msg = self._subscriber_socket.recv()

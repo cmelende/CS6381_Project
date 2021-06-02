@@ -11,11 +11,11 @@ from merged.examples.misc.value_objects.TopicHandlers import TopicHandler
 from merged.middleware.BrokerInfo import BrokerInfo
 from merged.middleware.adapter.SubscriberClient import SubscriberClient
 
-broker_info = BrokerInfo("127.0.0.1", "5560")
+broker_info = BrokerInfo("127.0.0.1", "5559")
 topic_handlers = [
     TopicHandler("SPORTS", [SportsMessageHandler()]),
     TopicHandler("MOVIES", [MoviesMessageHandler()]),
-    TopicHandler("NEWS", [NewsMessageHandler()])
+    TopicHandler("NEWS", [NewsMessageHandler()]),
 ]
 
 

@@ -3,6 +3,7 @@ import zmq
 
 from merged.examples.misc.logger.Logger import Logger
 from merged.implementations.notifier.publisher.NotifierPublisher import NotifierPublisher
+from merged.implementations.notifier.publisher.TopicsNotifierPublisherPair import TopicsNotifierPublisherPair
 from merged.middleware.BrokerInfo import BrokerInfo
 from merged.middleware.PublisherInfo import PublisherInfo
 from merged.middleware.strategy.PublisherStrategy import PublisherStrategy
@@ -14,7 +15,7 @@ class PublisherNotifierStrategy(PublisherStrategy):
         super().__init__(logger)
         self.__publisher_info = publisher_info
         self.__broker_info = broker_info
-        self.__notifier_publishers: list[NotifierPublisher] = []
+        self.__topics_publisher_pairs: list[TopicsNotifierPublisherPair] = list[TopicsNotifierPublisherPair]()
         self.__ctx = zmq.Context().instance()
 
     def register(self, topics: list[str]) -> None:
@@ -23,20 +24,24 @@ class PublisherNotifierStrategy(PublisherStrategy):
         self.__notify_broker_of_publisher(topics, publisher_port)
 
     def publish(self, topic: str, value: str) -> None:
-        publisher: NotifierPublisher
-        for publisher in self.__notifier_publishers:
-            publisher.publish(topic, value)
+        for pair in self.__topics_publisher_pairs:
+            for pub_topic in pair.Topics:
+                if pub_topic == topic:
+                    pair.Publisher.publish(topic, value)
+                    self._log_publish(topic, value)
 
     def close(self):
-        publisher: NotifierPublisher
-        for publisher in self.__notifier_publishers:
-            publisher.close()
+        for pub in self.__topics_publisher_pairs:
+            pub.Publisher.close()
         self.__ctx.term()
 
     def __create_publisher(self, topics: list[str], publisher_port: str) -> None:
-        publisher = NotifierPublisher(self.__publisher_info.PublisherAddress, publisher_port, topics)
+        publisher = NotifierPublisher()
+        publisher.connect(self.__publisher_info.PublisherAddress, publisher_port)
         self._log_registration(self.__publisher_info.PublisherAddress, publisher_port, topics, publisher)
-        self.__notifier_publishers.append(publisher)
+
+        topics_pub_pair = TopicsNotifierPublisherPair(topics, publisher)
+        self.__topics_publisher_pairs.append(topics_pub_pair)
 
     def __notify_broker_of_publisher(self, topics: list[str], publisher_port: str) -> None:
         request_socket = self.__ctx.socket(zmq.REQ)
@@ -55,6 +60,7 @@ class PublisherNotifierStrategy(PublisherStrategy):
         self._log_send(url, payload)
 
         resp = str(request_socket.recv(), encoding='utf-8')
+        self._log_recv(url, resp)
 
     def __consume_port(self):
         if len(self.__publisher_info.PublisherPortPool) == 0:

@@ -15,7 +15,7 @@ broker_info = BrokerInfo("127.0.0.1", "5560")
 publisher_info = PublisherInfo("127.0.0.1", ports)
 publisher_topics: list[PublisherTopics] = [
     PublisherTopics(["SPORTS", "NEWS"]),
-    PublisherTopics(["WEATHER", "POLITICS"])
+    PublisherTopics(["MOVIES"])
 ]
 
 
@@ -33,11 +33,10 @@ def main(argv) -> None:
         try:
             sleep(5)
             client.publish("SPORTS", "baseball")
-            client.publish("WEATHER", "Yankees: 1W-0L")
-            client.publish("POLITICS", "Congress in session")
+            client.publish("MOVIES", "early showing for dune")
             client.publish("NEWS", "cat rescued from tree")
         except KeyboardInterrupt:
-            print("Closing down")
+            print("Closing down...")
             client.close()
             should_continue = False
 

@@ -33,3 +33,6 @@ class PublisherStrategy(ABC):
 
     def _log_publish(self, topic: str, value: str):
         self._logger.log(f'publishing topic {topic} with message: {value}')
+
+    def _log_recv(self, url: str, received_string: str):
+        self._logger.log(f'received on {url}: {received_string}')
