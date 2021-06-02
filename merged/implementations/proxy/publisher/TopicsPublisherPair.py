@@ -1,7 +1,7 @@
-from merged.implementations.proxy.publisher.Publisher import Publisher
+from merged.implementations.proxy.publisher.ProxyPublisher import ProxyPublisher
 
 
 class TopicsPublisherPair:
-    def __init__(self, topics: list[str], publisher: Publisher):
+    def __init__(self, topics: list[str], publisher: ProxyPublisher):
         self.Topics = topics
         self.Publisher = publisher

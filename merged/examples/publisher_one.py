@@ -6,10 +6,12 @@ from merged.examples.misc.app.PublisherApp import PublisherApp
 from merged.examples.misc.app.options.PublisherAppOptions import PublisherAppOptions
 from merged.examples.misc.logger.DateTimeConsoleLogger import DateTimeConsoleLogger
 from merged.examples.misc.value_objects.PublisherTopics import PublisherTopics
+from merged.middleware.BrokerInfo import BrokerInfo
+from merged.middleware.PublisherInfo import PublisherInfo
 from merged.middleware.adapter.PublisherClient import PublisherClient
 
-host = "127.0.0.1"
-port = "5560"
+broker_info = BrokerInfo("127.0.0.1", "5558")
+publisher_info = PublisherInfo("127.0.0.1", ["5559", "5560", "5561"])
 publisher_topics: list[PublisherTopics] = [
     PublisherTopics(["SPORTS", "NEWS"]),
     PublisherTopics(["WEATHER", "POLITICS"])
@@ -17,7 +19,12 @@ publisher_topics: list[PublisherTopics] = [
 
 
 def main(argv) -> None:
-    options: PublisherAppOptions = PublisherAppOptions(host, port, argv, DateTimeConsoleLogger(), publisher_topics)
+    options: PublisherAppOptions = PublisherAppOptions(broker_info,
+                                                       publisher_info,
+                                                       argv,
+                                                       DateTimeConsoleLogger(),
+                                                       publisher_topics)
+
     app: App[PublisherClient] = PublisherApp(options)
     client = app.create_client()
 

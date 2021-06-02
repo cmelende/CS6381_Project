@@ -28,6 +28,7 @@ class App(ABC, Generic[TClient]):
 
     @staticmethod
     def __use_proxy_client(flag_value: str):
+        # todo: use BrokerType enum
         if flag_value == "proxy":
             return True
         elif flag_value == "notifier":

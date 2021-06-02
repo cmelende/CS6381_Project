@@ -2,12 +2,12 @@ import zmq
 from datetime import datetime
 
 
-class Publisher:
+class ProxyPublisher:
     def __init__(self):
         self._publish_socket = zmq.Context.instance().socket(zmq.PUB)
 
-    def connect(self, host_address: str, port: str):
-        self._publish_socket.connect("tcp://{}:{}".format(host_address, port))
+    def connect(self, broker_address: str, broker_port: str):
+        self._publish_socket.connect(f'tcp://{broker_address}:{broker_port}')
 
     def publish(self, topic: str, value: str) -> None:
         msg = f'{topic} : {value}'

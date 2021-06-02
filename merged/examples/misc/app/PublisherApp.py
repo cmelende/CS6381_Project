@@ -14,10 +14,11 @@ class PublisherApp(App):
     def create_client(self) -> TClient:
         strategy: PublisherStrategy
         if self._use_proxy:
-            # todo: fix - cant handle multiple pubs since we only know about one port
-            strategy = PublisherProxyStrategy(self._app_options.Host, self.__publisher_app_options.Port)
+            strategy = PublisherProxyStrategy(self.__publisher_app_options.BrokerInfo)
         else:
-            strategy = PublisherNotifierStrategy()
+            strategy = PublisherNotifierStrategy(self.__publisher_app_options.BrokerInfo,
+                                                 self.__publisher_app_options.PublisherInfo)
+
         client = PublisherClient(strategy)
 
         for pub_topics in self.__publisher_app_options.PublisherTopics:

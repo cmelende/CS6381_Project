@@ -16,7 +16,7 @@ class SubscriberApp(App):
     def __create_client(self) -> TClient:
         strategy: SubscriberStrategy()
         if self._use_proxy:
-            strategy = SubscriberProxyStrategy(self.__subscriber_options.Host, self.__subscriber_options.Port)
+            strategy = SubscriberProxyStrategy(self.__subscriber_options.BrokerInfo)
         else:
             strategy = SubscriberNotifierStrategy()
 

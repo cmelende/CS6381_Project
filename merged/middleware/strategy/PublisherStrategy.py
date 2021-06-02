@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 class PublisherStrategy(ABC):
 
     @abstractmethod
-    def register(self, topics: list[str]):
+    def register(self, topics: list[str]) -> None:
         pass
 
     @abstractmethod
@@ -14,3 +14,4 @@ class PublisherStrategy(ABC):
     @abstractmethod
     def close(self):
         pass
+

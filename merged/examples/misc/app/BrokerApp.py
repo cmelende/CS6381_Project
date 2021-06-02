@@ -14,7 +14,7 @@ class BrokerApp(App):
     def create_client(self) -> TClient:
         strategy: BrokerStrategy
         if self._use_proxy:
-            strategy = BrokerProxyStrategy(self.__broker_app_options.Host,
+            strategy = BrokerProxyStrategy(self.__broker_app_options.BrokerAddress,
                                            self.__broker_app_options.BrokerXSubPort,
                                            self.__broker_app_options.BrokerXPubPort)
         else:
