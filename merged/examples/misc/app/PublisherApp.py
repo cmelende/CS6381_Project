@@ -1,6 +1,6 @@
 from merged.examples.misc.app.App import App, TClient
 from merged.examples.misc.app.options.PublisherAppOptions import PublisherAppOptions
-from merged.implementations.notifier.PublisherNotifierStrategy import PublisherNotifierStrategy
+from merged.implementations.notifier.publisher.PublisherNotifierStrategy import PublisherNotifierStrategy
 from merged.implementations.proxy.publisher.PublisherProxyStrategy import PublisherProxyStrategy
 from merged.middleware.adapter.PublisherClient import PublisherClient
 from merged.middleware.strategy.PublisherStrategy import PublisherStrategy

@@ -24,7 +24,6 @@ def main(argv) -> None:
                                                        argv,
                                                        DateTimeConsoleLogger(),
                                                        publisher_topics)
-
     app: App[PublisherClient] = PublisherApp(options)
     client = app.create_client()
 

@@ -2,7 +2,7 @@ import json
 
 import zmq
 
-from merged.implementations.notifier.NotifierPublisher import NotifierPublisher
+from merged.implementations.notifier.publisher.NotifierPublisher import NotifierPublisher
 from merged.middleware.BrokerInfo import BrokerInfo
 from merged.middleware.PublisherInfo import PublisherInfo
 from merged.middleware.strategy.PublisherStrategy import PublisherStrategy
