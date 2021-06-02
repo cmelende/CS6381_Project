@@ -15,10 +15,10 @@ class BrokerApp(App):
         strategy: BrokerStrategy
         if self._use_proxy:
             strategy = BrokerProxyStrategy(self.__broker_app_options.Host,
-                                           self.__broker_app_options.XSubPort,
-                                           self.__broker_app_options.XPubPort)
+                                           self.__broker_app_options.BrokerXSubPort,
+                                           self.__broker_app_options.BrokerXPubPort)
         else:
-            strategy = BrokerNotifierStrategy()
+            strategy = BrokerNotifierStrategy(self.__broker_app_options.BrokerXPubPort)
         client = BrokerClient(strategy)
 
         return client
