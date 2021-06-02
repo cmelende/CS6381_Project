@@ -11,7 +11,9 @@ from merged.examples.misc.value_objects.TopicHandlers import TopicHandler
 from merged.middleware.BrokerInfo import BrokerInfo
 from merged.middleware.adapter.SubscriberClient import SubscriberClient
 
-broker_info = BrokerInfo("127.0.0.1", "5559")
+broker_info = BrokerInfo("127.0.0.1", "5560")
+broker_xpub_port = "5559"
+
 topic_handlers = [
     TopicHandler("SPORTS", [SportsMessageHandler()]),
     TopicHandler("MOVIES", [MoviesMessageHandler()]),
@@ -20,7 +22,7 @@ topic_handlers = [
 
 
 def main(argv):
-    options = SubscriberAppOptions(broker_info, argv, topic_handlers, DateTimeConsoleLogger())
+    options = SubscriberAppOptions(broker_info, broker_xpub_port, argv, topic_handlers, DateTimeConsoleLogger())
     subscriber_app: App[SubscriberClient] = SubscriberApp(options)
     client: SubscriberClient = subscriber_app.create_client()
 

@@ -8,21 +8,21 @@ class SubscriberStrategy(ABC):
     def __init__(self, logger: Logger):
         self._logger = logger
 
+    # this doenst really work when we are subscribing to all published topics, for the notifier, to
+    # get this to work, we probably want to ask the broker if there are any publishers for that topic
+    # then subscribe to those. shouldnt be too hard, just a little more work. But since we arent calling
+    # subscribe from any where we only
     @abstractmethod
-    def subscribe(self, topic: str, handlers: list[MessageHandler]) -> None:
-        pass
+    def subscribe(self, topic: str, handlers: list[MessageHandler]) -> None: pass
 
     @abstractmethod
-    def unsubscribe(self, topic: str) -> None:
-        pass
+    def unsubscribe(self, topic: str) -> None: pass
 
     @abstractmethod
-    def listen(self) -> None:
-        pass
+    def listen(self) -> None: pass
 
     @abstractmethod
-    def close(self) -> None:
-        pass
+    def close(self) -> None: pass
 
     def _log_subscription(self, address: str, port: str, topic: str, handlers: list[MessageHandler]):
         handler_names = self.__get_message_handler_names(handlers)

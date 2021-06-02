@@ -17,10 +17,13 @@ class SubscriberApp(App):
         strategy: SubscriberStrategy
         if self._use_proxy:
             strategy = SubscriberProxyStrategy(self.__subscriber_options.BrokerInfo,
-                                               self.__subscriber_options.Logger)
+                                               self.__subscriber_options.BrokerXPubPort,
+                                               self.__subscriber_options.Logger,
+                                               self.__subscriber_options.TopicHandlers)
         else:
             strategy = SubscriberNotifierStrategy(self.__subscriber_options.BrokerInfo,
-                                                  self.__subscriber_options.Logger)
+                                                  self.__subscriber_options.Logger,
+                                                  self.__subscriber_options.TopicHandlers)
 
         client: SubscriberClient = SubscriberClient(strategy)
         topic_handlers: TopicHandler
