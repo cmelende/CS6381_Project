@@ -1,6 +1,13 @@
 import sys
-from time import sleep, time
+import os
 
+cd = os.path.dirname(os.path.realpath(__file__))
+pd = os.path.dirname(cd)
+sys.path.append(pd)
+
+import argparse
+
+from time import sleep, time
 from merged.examples.misc.app.App import App
 from merged.examples.misc.app.PublisherApp import PublisherApp
 from merged.examples.misc.app.options.PublisherAppOptions import PublisherAppOptions
@@ -10,17 +17,17 @@ from merged.middleware.BrokerInfo import BrokerInfo
 from merged.middleware.PublisherInfo import PublisherInfo
 from merged.middleware.adapter.PublisherClient import PublisherClient
 
-broker_info = BrokerInfo("127.0.0.1", "5560")
-publisher_info = PublisherInfo("127.0.0.1", [7000])
-publisher_topics: list[PublisherTopics] = [
-    PublisherTopics(["timer"])
-]
 
+def main(args) -> None:
+    broker_info = BrokerInfo(args.broker_address, args.broker_port)
+    publisher_info = PublisherInfo(args.publisher_address, [args.publisher_port])
+    publisher_topics: list[PublisherTopics] = [
+        PublisherTopics(["timer"])
+    ]
 
-def main(argv) -> None:
     options: PublisherAppOptions = PublisherAppOptions(broker_info,
                                                        publisher_info,
-                                                       argv,
+                                                       f"--flag={args.mode}",
                                                        DateTimeConsoleLogger(),
                                                        publisher_topics)
     app: App[PublisherClient] = PublisherApp(options)
@@ -39,4 +46,11 @@ def main(argv) -> None:
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    parser = argparse.ArgumentParser()
+    parser.add_argument("broker_address", help="IP Address of broker", default="127.0.0.1")
+    parser.add_argument('broker_port', help="port of the broker", default=5263, type=int)
+    parser.add_argument('publisher_address', help="address of *this* publisher", default="127.0.0.1", type=str)
+    parser.add_argument('publisher_port', help="port of *this* publisher's port", default=7000, type=int)
+    parser.add_argument('mode', help="proxy OR notifier", default="proxy", type=str, nargs='?')
+    args = parser.parse_args()
+    main(args)
