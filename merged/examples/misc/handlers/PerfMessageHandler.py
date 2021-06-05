@@ -16,6 +16,7 @@ class PerfMessageHandler(MessageHandler):
         self._messages.append(now-ts)
 
     def flush(self):
-        #file.writelines("\n".join(f"{i},{v}" for i, v in enumerate(self._messages)))
+        with open(f"{self._name}.csv", "a+") as file:
+            file.writelines("\n".join(f"{i},{v}" for i, v in enumerate(self._messages)))
         plt.plot(range(len(self._messages)), self._messages)
         plt.savefig(f"{self._name}.png")

@@ -19,7 +19,7 @@ class SubscriberStrategy(ABC):
     def unsubscribe(self, topic: str) -> None: pass
 
     @abstractmethod
-    def listen(self) -> None: pass
+    def listen(self, expected_count=None) -> None: pass
 
     @abstractmethod
     def close(self) -> None: pass

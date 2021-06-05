@@ -15,8 +15,8 @@ class SubscriberClient:
     def unsubscribe(self, topic: str) -> None:
         self._subscriber_strategy.unsubscribe(topic)
 
-    def listen(self) -> None:
-        self._subscriber_strategy.listen()
+    def listen(self, expected_count=None) -> None:
+        self._subscriber_strategy.listen(expected_count=expected_count)
 
     def close(self):
         self._subscriber_strategy.close()

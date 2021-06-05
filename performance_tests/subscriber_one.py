@@ -21,7 +21,7 @@ def main(args):
     broker_info = BrokerInfo(args.broker_address, args.broker_sub_port)
     broker_xpub_port = args.broker_pub_port
     print(os.path.join(args.directory, f"{args.subscriber_name}"))
-    handler = PerfMessageHandler(f"{args.subscriber_name}")
+    handler = PerfMessageHandler(os.path.join(args.directory, f"{args.subscriber_name}"))
     topic_handlers = [TopicHandler("timer", [handler])]
 
     options = SubscriberAppOptions(broker_info, broker_xpub_port, f"--flag={args.mode}", topic_handlers, DateTimeConsoleLogger())

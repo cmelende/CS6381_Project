@@ -30,12 +30,17 @@ class SubscriberProxyStrategy(SubscriberStrategy):
         self._log_subscription(self.__broker_info.BrokerAddress, self.__broker_xpub_port, topic, handlers)
         self.__subscribers.append(subscriber)
 
-    def listen(self) -> None:
+    def listen(self, expected_count=None) -> None:
+        count = expected_count if isinstance(expected_count, int) else -1
+
         while self.__keepRunning:
             sub: ProxySubscriber
             for sub in self.__subscribers:
                 self._log_listen(sub.Topic)
                 sub.receive()
+                count -= 1
+                if count == 0:
+                    self.__keepRunning = False
 
     def close(self) -> None:
         self.__keepRunning = False

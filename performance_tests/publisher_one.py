@@ -33,7 +33,7 @@ def main(args) -> None:
     app: App[PublisherClient] = PublisherApp(options)
     client = app.create_client()
 
-    count = 100
+    count = args.count
     while count > 0:
         try:
             sleep(0.10)
@@ -51,6 +51,7 @@ if __name__ == "__main__":
     parser.add_argument('broker_port', help="port of the broker", default=5263, type=int)
     parser.add_argument('publisher_address', help="address of *this* publisher", default="127.0.0.1", type=str)
     parser.add_argument('publisher_port', help="port of *this* publisher's port", default=7000, type=int)
+    parser.add_argument('count', help="Number of publications", default=100, type=int)
     parser.add_argument('mode', help="proxy OR notifier", default="proxy", type=str, nargs='?')
     args = parser.parse_args()
     main(args)

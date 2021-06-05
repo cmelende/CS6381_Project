@@ -34,7 +34,7 @@ class SubscriberNotifierStrategy(SubscriberStrategy):
                 self._log_subscription(available_publisher.Host, available_publisher.Port, topic, handlers)
                 self.__subscribers.append(subscriber)
 
-    def listen(self) -> None:
+    def listen(self, expected_count=None) -> None:
         while self.__keepRunning:
             sub: NotifierSubscriber
             for sub in self.__subscribers:
