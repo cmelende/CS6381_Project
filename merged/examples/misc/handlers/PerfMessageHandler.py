@@ -12,8 +12,8 @@ class PerfMessageHandler(MessageHandler):
 
     def handle_message(self, value: str) -> None:
         ts = float(value.split(":")[1])
-        now = time()
-        self._messages.append(now-ts)
+        now = time() - ts
+        self._messages.append(now)
 
     def flush(self):
         with open(f"{self._name}.csv", "a+") as file:
