@@ -34,9 +34,9 @@ def main(args) -> None:
     client = app.create_client()
 
     count = args.count
-    while count > 0:
+    while count >= 0:
         try:
-            sleep(0.10)
+            sleep(0.15)
             client.publish("timer", str(time()))
             count -= 1
         except KeyboardInterrupt:

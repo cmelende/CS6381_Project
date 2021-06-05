@@ -15,7 +15,6 @@ import argparse
 
 
 def main(args) -> None:
-    print("Starting broker...")
     broker_info = BrokerInfo(args.broker_address, args.publisher_port)
     xpub_port = args.subscriber_port
 

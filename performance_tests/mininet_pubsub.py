@@ -24,17 +24,19 @@ net.addLink(s1, sub04)
 net.addLink(s1, pub01)
 net.start()
 
+sub_reads = 300
+pub_writes = 300
+
 d = os.path.join(os.getcwd(), datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
 os.makedirs(d)
-print(f'python broker.py {broker.IP()} 5263 5262 proxy')
-print(f'python subscriber_one.py {broker.IP()} 5262 5263 10 {d} sub01 proxy')
-print(f'python publisher_one.py {broker.IP()} 5263 {pub01.IP()} 7000 10 proxy')
+
 broker.cmd(f'python broker.py {broker.IP()} 5263 5262 proxy &')
-sub01.cmd(f'python subscriber_one.py {broker.IP()} 5262 5263 10 {d} sub01 proxy &')
-sub02.cmd(f'python subscriber_one.py {broker.IP()} 5262 5263 10 {d} sub02 proxy &')
-sub03.cmd(f'python subscriber_one.py {broker.IP()} 5262 5263 10 {d} sub03 proxy &')
-sub04.cmd(f'python subscriber_one.py {broker.IP()} 5262 5263 10 {d} sub04 proxy &')
-pub01.cmd(f'python publisher_one.py {broker.IP()} 5263 {pub01.IP()} 7000 100 proxy  &')
+sub01.cmd(f'python subscriber_one.py {broker.IP()} 5262 5263 {sub_reads} {d} sub01 proxy &')
+sub02.cmd(f'python subscriber_one.py {broker.IP()} 5262 5263 {sub_reads} {d} sub02 proxy &')
+sub03.cmd(f'python subscriber_one.py {broker.IP()} 5262 5263 {sub_reads} {d} sub03 proxy &')
+#sub04.cmd(f'python subscriber_one.py {broker.IP()} 5262 5263 {sub_reads} {d} sub04 proxy &')
+sleep(2)
+pub01.cmd(f'python publisher_one.py {broker.IP()} 5263 {pub01.IP()} 7000 {pub_writes} proxy  &')
 #CLI(net)
-sleep(10)
+sleep(60)
 net.stop()
