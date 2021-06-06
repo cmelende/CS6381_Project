@@ -16,9 +16,9 @@ class NotifierSubscriber:
 
     def receive(self) -> None:
         try:
-            topic, *msg = self.__subscriber_socket.recv_string(zmq.DONTWAIT).split(":")
+            msg = self.__subscriber_socket.recv(zmq.DONTWAIT)
             for handler in self.__message_handlers:
-                handler.handle_message(f'{msg}')
+                handler.handle_message(f'{msg.decode("utf-8")}')
         except zmq.Again:
             pass
 
