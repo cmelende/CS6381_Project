@@ -1,9 +1,9 @@
 from time import time, sleep
 import argparse
 from uuid import uuid4
-from merged.implementations.proxy.publisher.PublisherProxyStrategy import PublisherProxyStrategy
-from merged.middleware.BrokerInfo import BrokerInfo
-from merged.middleware.adapter.PublisherClient import PublisherClient
+from zmqmw.implementations.proxy.publisher.PublisherProxyStrategy import PublisherProxyStrategy
+from zmqmw.middleware.BrokerInfo import BrokerInfo
+from zmqmw.middleware.adapter.PublisherClient import PublisherClient
 
 
 # we create an OPTIONAL logger, for demonstration purposes

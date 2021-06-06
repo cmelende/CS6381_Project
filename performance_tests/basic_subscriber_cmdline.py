@@ -1,12 +1,12 @@
 import argparse
 import os.path
 from time import time
-from merged.implementations.proxy.subscriber.SubscriberProxyStrategy import SubscriberProxyStrategy
-from merged.middleware.BrokerInfo import BrokerInfo
-from merged.middleware.adapter.SubscriberClient import SubscriberClient
+from zmqmw.implementations.proxy.subscriber.SubscriberProxyStrategy import SubscriberProxyStrategy
+from zmqmw.middleware.BrokerInfo import BrokerInfo
+from zmqmw.middleware.adapter.SubscriberClient import SubscriberClient
 
 # we create an OPTIONAL logger, for demonstration purposes
-from merged.middleware.handler.MessageHandler import MessageHandler
+from zmqmw.middleware.handler.MessageHandler import MessageHandler
 
 
 # an OPTIONAL logger we can use for our strategy

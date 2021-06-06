@@ -1,6 +1,6 @@
-from merged.base_classes.Logger import Logger
-from merged.middleware.adapter.BrokerClient import BrokerClient
-from merged.implementations.proxy.BrokerProxyStrategy import BrokerProxyStrategy
+from zmqmw.base_classes.Logger import Logger
+from zmqmw.middleware.adapter.BrokerClient import BrokerClient
+from zmqmw.implementations.proxy.BrokerProxyStrategy import BrokerProxyStrategy
 import argparse
 
 
