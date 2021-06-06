@@ -22,8 +22,9 @@ class SubscriberNotifierStrategy(SubscriberStrategy):
     def unsubscribe(self, topic: str) -> None:
         subscriber: NotifierSubscriber
         for subscriber in self.__subscribers:
-            subscriber.close()
-            self.__subscribers.remove(subscriber)
+            if topic == subscriber.Topic:
+                subscriber.close()
+                self.__subscribers.remove(subscriber)
 
     def subscribe(self, topic: str, handlers: list[MessageHandler]) -> None:
         available_publishers = self.get_available_publishers_by_topic(self.__broker_info, topic)

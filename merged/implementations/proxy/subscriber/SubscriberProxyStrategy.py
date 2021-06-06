@@ -21,8 +21,9 @@ class SubscriberProxyStrategy(SubscriberStrategy):
     def unsubscribe(self, topic: str) -> None:
         sub: ProxySubscriber
         for sub in self.__subscribers:
-            sub.close()
-            self.__subscribers.remove(sub)
+            if topic == sub.Topic:
+                sub.close()
+                self.__subscribers.remove(sub)
 
     def subscribe(self, topic: str, handlers: list[MessageHandler]) -> None:
         subscriber = ProxySubscriber(topic, handlers)
