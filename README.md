@@ -9,31 +9,31 @@ This repository contains middleware built on top of 0MQ's pyzmq library. The mid
 ### Terms and Definitions
 
 ##### Message
-These are considered the 'payload' for communication between Publishers and Subscribers, in the real world, these can either be bytes, strings, or strings that contain json objects that are later deserialized into in-memory objects
+These are considered the 'payload' for communication between Publishers and Subscribers, in the real world, these can either be bytes, strings, or strings that contain json objects that are later deserialized into in-memory objects.
 
 ##### Topic
-Strings that are assigned to each message that tells the Publisher or Subscriber what type of message it is. For Publishers, they are important in order to let the middleware what type of message they publish. For Subscribers, these are important to notify the middleware which messages they should receive.
+Strings that are assigned to each message that tells the Publisher or Subscriber what type of message it is. For Publishers, they are important in order to let the middleware know what types of messages they publish. For Subscribers, these are important to notify the middleware which messages they should receive.
 
 ##### Subscriber 
 These are the receivers in the pub/sub architecture, they receive messages from Publishers directly or indirectly from a broker. Subscribers will only receive messages directly from publishers if you choose to run the middleware in the Notifier Mode, otherwise, Subscribers will receive messages from the broker in Proxy Mode.
 
 ##### Publisher 
-These are the clients that send messages in the publisher/subscriber architecture, in our middleware they send messages either directly or indirectly to subscribers, depending on if you are using Notifier Mode or Proxy Mode, respectively.  
+These are the entities that send messages in the publisher/subscriber architecture, in our middleware they send messages either directly or indirectly to Subscribers, depending on if you are using Notifier Mode or Proxy Mode, respectively.  
 
 ##### Broker
 This middleware has two implementations of a broker, a broker that can run in Notifier Mode and a broker that can run in Proxy Mode, we will explain the differences later in this document but for now know that the broker in either mode assists in routing published messages from Publishers to Subscribers that are subscribed to those topics.
 
 ##### Client
-This is just a term for any application code that either utilizes the Publisher or Subscriber middleware of this project. The application code will handle the sending and receiving of messages through an abstraction (see 'Implementation Details' for more details) without necessarily having to know about which implementation, of the broker is being used.
+This is just a term for any application code that either utilizes the Publisher or Subscriber middleware of this project. The application code will handle the sending and receiving of messages through an abstraction (see 'Implementation Details' for info) without necessarily having to know about which implementation of the broker is being used.
 
 ##### Mode 
-Refers to the which implementation, Proxy or Notifier, is being used. There is a command line argument flag, --flag, that determines this (see 'API & Usages' section).
+Refers to the which implementation, Proxy or Notifier, is being used. There is a command line argument, --flag, that determines this (see 'API & Usages' section).
 
 ##### Notifier Mode
-This implementation is used when --flag=notifier is passed in via the command line argument. This implementation allows Publishers to directly communicate to Subscribers via a broker, where the broker Subscriber which Publishers to connect to to receive messages.
+This implementation is used when --flag=notifier is passed in via the command line argument. This implementation allows Publishers to directly communicate to Subscribers via a broker, where the broker notifies Subscribers which Publishers to connect to to receive messages.
 
 ##### Proxy Mode
-This implementation is used when --flag=proxy is passed in via the command line argument. This implementation allows for Publishers to publish messages without knowing about which Subscribers are subscribed to those messages and vice versa with Subscribers. When a Publisher publishes a message, it will relay it through a proxy (see 'Implementation Details' for more details) which knows and determines which subscriber to send the message to. 
+This implementation is used when --flag=proxy is passed in via the command line argument. This implementation allows for Publishers to publish messages without knowing about which Subscribers are subscribed to those messages and vice versa with Subscribers. When a Publisher publishes a message, it will relay it through a proxy (see 'Implementation Details' for more info) which knows and determines which subscriber to send the message to. 
 
 #### API & Usages
 We'll now go over how to interact with this sytem. The middleware is designed to be used by three different types of programs: 
@@ -43,6 +43,7 @@ We'll now go over how to interact with this sytem. The middleware is designed to
 
 ##### Creating Clients (note these may change due to todo # 10)
 The client is the main class in our API that you can interact with. In our examples we have some other helper classes that take care of this setup to reduce the amount of code, but they are not required.
+
 ###### BrokerClient
 To create a broker client, all that is needed is to instantiate either a BrokerNotifierStrategy or a BrokerProxyStrategy and pass it into the BrokerClient
 ```
@@ -81,19 +82,19 @@ client = Publisherclient(notifierStrat)
 ###### SubscriberClient
 ```
 # creating a SubscriberClient that behaves under Proxy Mode
-# The subscribers will use the BrokerInfo to connect to the broker. The list of topic handlers here should be unused and will change in the future.
+# The subscribers will use the BrokerInfo to connect to the broker. The list of topic handlers here are unused and will be removed in the future.
 proxyStrat = new SubscriberProxyStrategy(BrokerInfo("127.0.0.1", "5560"), "5559", [TopicHandler("SPORTS", [SportsMessageHandler()]]), DateTimeConsoleLogger())
 client = SubscriberClient(proxyStrat)
 ```
 
 ```
 # creating a SubscriberClient that behaves under Notifier Mode
-# uses BrokerInfo to connect to the broker and takes in a list of topic handlers that are unused at the moment and will be removed from parameters
+# uses BrokerInfo to connect to the broker and takes in a list of topic handlers that are unused at the moment and will be removed from the constructor parameters
 notifierStrat = new SubscriberNotifierStrategy(BrokerInfo("127.0.0.1", "5560"), DateTimeConsoleLogger(), [])
 ```
 
-For the examples we provide, its important to note that we'll be using a few helper classes in order to setup our middleware a little easier, but these can be defined by the application code developers and they are not required:
-* App - this program is responsible for parsing the value of the command line arguments. It looks only for the --flag command line argument which dictates what mode we should run the Broker, Publisher, Or Subscriber program in.
+For the examples we provide, its important to note that we are using a few helper classes in order to setup our middleware a little easier, but these can be defined by the application code developers and are not required:
+* App - this program is responsible for parsing the value of the command line arguments. It looks only for the --flag command line argument which dictates what mode we should run the Broker, Publisher, Or Subscriber middleware in.
 * BrokerApp - inherits off of App, this class is responsible for creating the BrokerStrategy object, which will dictate what behaviour the Broker will exhibit
 * PublisherApp - inherits off of App, this class is responsible for creating the PublisherStrategy object, which will dictate what behaviour the Publishers exhibit
 * SubscriberApp - inherits off of App, this class is responsible for creating the SubscriberStrategy object, which will dictate what behaviour the Subscribers exhibit
@@ -120,7 +121,7 @@ This is a lightweight class that acts as the consumer of the BrokerStrategy abst
 ###### BrokerStrategy
 This is an abstraction that allows the BrokerClient to be unaware of how the Publishers & Subscribers communicate with each other. It defines the following methods:
 
-* run() - used by each implementation to setup what is needed, for our implementations it sets up the appropiate sockets that it will use to communicate with the Subscribers & Brokers
+* run() - used by each implementation to setup what is needed, for our implementations it sets up the appropiate sockets that it will use to communicate with the Subscribers & Publishers
 * close() - used by each implementation to teardown any resources that they need to free up - 0MQ documentation recommends that when you stop an application that you close each socket, otherwise some undefined behaviour may occur.
  
 ###### BrokerProxyStrategy
@@ -131,7 +132,7 @@ When this implementation is instantiated, we setup XPUB & XSUB sockets and setup
 ###### BrokerNotifierStrategy
 When this implemenation is instantiated, we setup a REP socket that handles two types of requests from either a Publisher or Subscriber
 * 'request\${topic}' - when the BrokerNotifierStrategy receives a REQ message with a payload starting with 'request$', which should be from a Subscriber, it parses the topic out of the payload and then returns all publishers of that topic. This allows any Subscribers using our middleware to Subscribe to a topic at any time and receive the most up to date Publishers that are publishing those topics. The subscriber can then connect to those publishers.
-* 'register\${json}' - When the BrokerNotifierStrategy receives a REQ message with a payload starting with 'register$', which should be from a Publisher, it parses the json out of the payload and then uses the object it parsed to register to store the information in a list for later retreival when a Subscriber asks for Publishers that are available. The object is in the form 
+* 'register\${json}' - When the BrokerNotifierStrategy receives a REQ message with a payload starting with 'register$', which should be from a Publisher, it parses the json out of the payload and then uses the object it parsed to register and store the information in a list for later retreival when a Subscriber asks for Publishers that are available. The object is in the form 
 	```
 	{
 		ip: str
@@ -212,8 +213,8 @@ todo:
 5. SubscriberNotifierStrategy creates a socket for each call to get_available_publishers_by_topic, we probably need to only set this up once.
 6. SubscriberNotifierStrategy line 22, we need to only remove and close the subscribers that have a matching topic of the topic passed into this method
 7. SubscriberProxyStrategy - we can probaby copy what SubscriberNotifierStrategy is doing and not wait for each message each subscriber is waiting for.
-8. Higher level issue - in notifier mode, when a publisher signs on, subscribers do not know abou this new publisher. We can make the notifier mode slower (which may be good for our assignment to show the issues with this approach) by forcing each subscriber to go and ask the broker for the Publishers that publish those topics and connect to the ones that the subscriber doenst know about (which would be any new publishers that have signed on after the subscriber subscribes to a specifieid topic).
+8. Higher level issue - in notifier mode, when a publisher signs on, subscribers do not know about new publishers. We can make the notifier mode slower (which may be good for our assignment to show the issues with this approach) by forcing each subscriber to go and ask the broker for the Publishers that publish those topics and connect to the ones that the subscriber doenst know about (which would be any new publishers that have signed on after the subscriber subscribes to a specifieid topic).
 9. PublisherNotifierStrategy, we probably need to make the REQ socket once in the constructor
-10. Standardize whether or not we pass in an object to the strategy objects or strings. its a little messy the way its setup now
+10. Standardize whether or not we pass in an object to the strategy objects or strings. its a little messy the way its setup now since the ctor parameters look different for each strategy
 11. Do we need to remove Logger? i mostly use this for devleopment but could see it as a benefit to application developers using this middleware
 12. the port pool is not needed, we can probably remove it if we dont want to allow application code to register more than one publisher (one publisher = one socket)
