@@ -19,9 +19,8 @@ class PublisherNotifierStrategy(PublisherStrategy):
         self.__ctx = zmq.Context().instance()
 
     def register(self, topics: list[str]) -> None:
-        publisher_port = self.__consume_port()
-        self.__create_publisher(topics, publisher_port)
-        self.__notify_broker_of_publisher(topics, publisher_port)
+        self.__create_publisher(topics, self.__publisher_info.PublisherPort)
+        self.__notify_broker_of_publisher(topics, self.__publisher_info.PublisherPort)
 
     def publish(self, topic: str, value: str) -> None:
         for pair in self.__topics_publisher_pairs:
@@ -46,7 +45,7 @@ class PublisherNotifierStrategy(PublisherStrategy):
     def __notify_broker_of_publisher(self, topics: list[str], publisher_port: str) -> None:
         request_socket = self.__ctx.socket(zmq.REQ)
 
-        url = f'{self.__broker_info.BrokerAddress}:{self.__broker_info.BrokerPort}'
+        url = f'{self.__broker_info.BrokerAddress}:{self.__broker_info.BrokerSubPort}'
         request_socket.connect(f"tcp://{url}")
         self._log_socket_connection(url, "REQ")
 
@@ -62,7 +61,3 @@ class PublisherNotifierStrategy(PublisherStrategy):
         resp = str(request_socket.recv(), encoding='utf-8')
         self._log_recv(url, resp)
 
-    def __consume_port(self):
-        if len(self.__publisher_info.PublisherPortPool) == 0:
-            raise Exception("Out of ports")
-        return self.__publisher_info.PublisherPortPool.pop(0)

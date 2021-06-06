@@ -49,7 +49,7 @@ class SubscriberNotifierStrategy(SubscriberStrategy):
     def get_available_publishers_by_topic(broker_info: BrokerInfo, topic: str) -> list[AvailablePublishers]:
         ctx = zmq.Context().instance()
         s = ctx.socket(zmq.REQ)
-        s.connect(f"tcp://{broker_info.BrokerAddress}:{broker_info.BrokerPort}")
+        s.connect(f"tcp://{broker_info.BrokerAddress}:{broker_info.BrokerPubPort}")
         s.send_string(f"request${topic}")
         topics = json.loads((s.recv()))
 
