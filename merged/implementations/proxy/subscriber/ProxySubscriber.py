@@ -18,7 +18,6 @@ class ProxySubscriber:
     def receive(self) -> None:
         msg = self._subscriber_socket.recv()
         for handler in self.__message_handlers:
-
             # (gsh) messages coming in from recv() are bytes - add conversion to string
             handler.handle_message(f'{msg.decode("utf-8")}')
 

@@ -1,6 +1,6 @@
 import zmq
 
-from merged.examples.misc.logger.Logger import Logger
+from merged.base_classes.Logger import Logger
 from merged.implementations.proxy.publisher.ProxyPublisher import ProxyPublisher
 from merged.implementations.proxy.publisher.TopicsPublisherPair import TopicsPublisherPair
 from merged.middleware.BrokerInfo import BrokerInfo
@@ -8,15 +8,20 @@ from merged.middleware.strategy.PublisherStrategy import PublisherStrategy
 
 
 class PublisherProxyStrategy(PublisherStrategy):
-    def __init__(self, broker_info: BrokerInfo, logger: Logger):
+    def __init__(self, broker_info: BrokerInfo, logger: Logger = Logger()):
+        """
+        Creates a new PublisherProxyStrategy object.
+        :param broker_info: Required BrokerInfo object describing the broker.
+        :param logger: An optional logger object implementing `merged.base_classes.Logger`
+        """
         super().__init__(logger)
         self.__broker_info = broker_info
         self.__topics_publisher_pairs: list[TopicsPublisherPair] = list[TopicsPublisherPair]()
 
-    def register(self, topics: list[str]):
+    def register(self, topics: list[str]) -> None:
         publisher = ProxyPublisher()
-        publisher.connect(self.__broker_info.BrokerAddress, self.__broker_info.BrokerPort)
-        self._log_registration(self.__broker_info.BrokerAddress, self.__broker_info.BrokerPort, topics, publisher)
+        publisher.connect(self.__broker_info.BrokerAddress, self.__broker_info.BrokerSubPort)
+        self._log_registration(self.__broker_info.BrokerAddress, self.__broker_info.BrokerSubPort, topics, publisher)
 
         topics_pub_pair = TopicsPublisherPair(topics, publisher)
         self.__topics_publisher_pairs.append(topics_pub_pair)

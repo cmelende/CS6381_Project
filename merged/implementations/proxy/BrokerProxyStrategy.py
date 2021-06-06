@@ -5,7 +5,7 @@ from merged.middleware.strategy.BrokerStrategy import BrokerStrategy
 
 
 class BrokerProxyStrategy(BrokerStrategy):
-    def __init__(self, broker_address: str, broker_xsub_port: int, broker_xpub_port: int, logger: Logger = None):
+    def __init__(self, broker_address: str, broker_xsub_port: int, broker_xpub_port: int, logger: Logger = Logger()):
         """
         Creates a new brokerProxyStrategy object.
 
@@ -14,13 +14,6 @@ class BrokerProxyStrategy(BrokerStrategy):
         :param broker_xpub_port: The port which shall listen for publishers.
         :param logger: An optional Log object that implements `merged.base_classes.Logger`
         """
-
-        # let's allow logger to be optional but still available.
-        if not logger:
-            class NonLogger(Logger):
-                def log(self, val: str):
-                    pass
-            logger = NonLogger()
 
         self.__logger = logger
         self.__isRunning = True
@@ -38,10 +31,19 @@ class BrokerProxyStrategy(BrokerStrategy):
 
         self.__proxy: zmq.proxy = None
 
-    def run(self):
+    def run(self) -> None:
+        """
+        This method begins the proxying.
+        :return: None
+        """
         self.__proxy = zmq.proxy(self.__xpub_socket, self.__xsub_socket)
 
-    def close(self):
+    def close(self) -> None:
+        """
+        Terminates the Proxy.
+        :return: None
+        """
+        self.__logger.log("Terminating proxy.")
         self.__xpub_socket.close()
         self.__xsub_socket.close()
         self.__context.term()

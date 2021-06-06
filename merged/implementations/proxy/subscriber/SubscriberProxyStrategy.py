@@ -7,9 +7,9 @@ from merged.middleware.strategy.SubscriberStrategy import SubscriberStrategy
 
 
 class SubscriberProxyStrategy(SubscriberStrategy):
-    def __init__(self, broker_info: BrokerInfo, broker_xpub_port: str, logger: Logger, topic_handlers: list[TopicHandler]):
+    def __init__(self, broker_info: BrokerInfo, logger: Logger, topic_handlers: list[TopicHandler]):
         super().__init__(logger)
-        self.__broker_xpub_port = broker_xpub_port
+        self.__broker_xpub_port = broker_info.BrokerPubPort
         self.__broker_info = broker_info
         self.__subscribers: list[ProxySubscriber] = list[ProxySubscriber]()
         self.__keepRunning = True

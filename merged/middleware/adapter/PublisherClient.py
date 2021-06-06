@@ -10,6 +10,12 @@ class PublisherClient:
         self._publisher_strategy: PublisherStrategy = strategy
 
     def register(self, topics: list[str]) -> None:
+        """
+        Registers a list of topics with the Publisher.
+
+        :param topics: A list of topics for the publisher to register.
+        :return: None
+        """
         self._publisher_strategy.register(topics)
 
     def publish(self, topic: str, val: str) -> None:
