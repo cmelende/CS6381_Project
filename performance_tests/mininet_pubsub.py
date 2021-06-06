@@ -24,8 +24,8 @@ net.addLink(s1, sub04)
 net.addLink(s1, pub01)
 net.start()
 
-sub_reads = 300
-pub_writes = 300
+sub_reads = 1000
+pub_writes = 1000
 
 d = os.path.join(os.getcwd(), datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
 os.makedirs(d)
