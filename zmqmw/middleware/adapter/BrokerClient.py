@@ -1,4 +1,4 @@
-from merged.middleware.strategy.BrokerStrategy import BrokerStrategy
+from zmqmw.middleware.strategy.BrokerStrategy import BrokerStrategy
 
 
 class BrokerClient:

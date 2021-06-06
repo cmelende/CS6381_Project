@@ -1,8 +1,8 @@
-from merged.examples.misc.app.options.AppOptions import AppOptions
-from merged.examples.misc.logger.Logger import Logger
-from merged.examples.misc.value_objects.PublisherTopics import PublisherTopics
-from merged.middleware.BrokerInfo import BrokerInfo
-from merged.middleware.PublisherInfo import PublisherInfo
+from zmqmw.examples.misc.app.options.AppOptions import AppOptions
+from zmqmw.examples.misc.logger.Logger import Logger
+from zmqmw.examples.misc.value_objects.PublisherTopics import PublisherTopics
+from zmqmw.middleware.BrokerInfo import BrokerInfo
+from zmqmw.middleware.PublisherInfo import PublisherInfo
 
 
 class PublisherAppOptions(AppOptions):

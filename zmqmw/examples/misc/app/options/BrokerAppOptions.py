@@ -1,6 +1,6 @@
-from merged.examples.misc.app.options.AppOptions import AppOptions
-from merged.examples.misc.logger.Logger import Logger
-from merged.middleware.BrokerInfo import BrokerInfo
+from zmqmw.examples.misc.app.options.AppOptions import AppOptions
+from zmqmw.examples.misc.logger.Logger import Logger
+from zmqmw.middleware.BrokerInfo import BrokerInfo
 
 
 class BrokerAppOptions(AppOptions):

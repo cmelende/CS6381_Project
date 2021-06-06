@@ -1,5 +1,5 @@
-from merged.middleware.handler.MessageHandler import MessageHandler
-from merged.middleware.strategy.SubscriberStrategy import SubscriberStrategy
+from zmqmw.middleware.handler.MessageHandler import MessageHandler
+from zmqmw.middleware.strategy.SubscriberStrategy import SubscriberStrategy
 
 
 class SubscriberClient:

@@ -1,7 +1,7 @@
-from merged.examples.misc.app.options.AppOptions import AppOptions
-from merged.examples.misc.logger.Logger import Logger
-from merged.examples.misc.value_objects import TopicHandlers
-from merged.middleware.BrokerInfo import BrokerInfo
+from zmqmw.examples.misc.app.options.AppOptions import AppOptions
+from zmqmw.examples.misc.logger.Logger import Logger
+from zmqmw.examples.misc.value_objects import TopicHandlers
+from zmqmw.middleware.BrokerInfo import BrokerInfo
 
 
 class SubscriberAppOptions(AppOptions):

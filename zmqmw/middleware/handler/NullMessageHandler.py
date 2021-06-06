@@ -1,4 +1,4 @@
-from merged.middleware.handler.MessageHandler import MessageHandler
+from zmqmw.middleware.handler.MessageHandler import MessageHandler
 
 
 class NullMessageHandler(MessageHandler):
