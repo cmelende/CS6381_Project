@@ -22,7 +22,10 @@ publisher = PublisherClient(strategy=strategy)
 # register topics we want to publish for...
 publisher.register(topics=['timer'])
 
-for i in range(100):
-    # publish!
-    publisher.publish(topic='timer', val=str(time()))
-    sleep(1)
+try:
+    for i in range(100):
+        # publish!
+        publisher.publish(topic='timer', val=str(time()))
+        sleep(1)
+except KeyboardInterrupt:
+    publisher.close()

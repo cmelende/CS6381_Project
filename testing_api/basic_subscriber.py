@@ -28,4 +28,8 @@ strategy = SubscriberProxyStrategy(broker_info=broker, logger=LocalLogger())
 subscriber = SubscriberClient(subscriber_strategy=strategy)
 
 subscriber.subscribe(topic='timer', handlers=[TimerHandler()])
-subscriber.listen()
+
+try:
+    subscriber.listen()
+except KeyboardInterrupt:
+    subscriber.close()
