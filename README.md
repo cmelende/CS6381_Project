@@ -44,6 +44,12 @@ We'll now go over how to interact with this sytem. The middleware is designed to
 ##### Creating Clients (note these may change due to todo # 10)
 The client is the main class in our API that you can interact with. In our examples we have some other helper classes that take care of this setup to reduce the amount of code, but they are not required.
 
+The middleware can be thought of being broken up into 2 different implementations, which dictates how the system's participants will interact with each other and must be used together in order for the system to work as intended:
+* Notifier: BrokerNotifierStrategy, SubscriberNotifierStrategy, & PublisherNotifierStrategy -  this facilitates communication between subscribers and publishers directly.
+* Proxy: BrokerProxyStrategy, SubscriberProxyStrategy, & PublisherProxyStrategy -  this facilitate communication between subscribers and publishers be decoupled, where messages are routed purely through a broker
+
+The implementation is dependent on if you use the 'flag=notifier' or 'flag=proxy' command line argument.
+
 ###### BrokerClient
 To create a broker client, all that is needed is to instantiate either a BrokerNotifierStrategy or a BrokerProxyStrategy and pass it into the BrokerClient
 ```
@@ -102,11 +108,7 @@ For the examples we provide, its important to note that we are using a few helpe
 Examples can be found in merged/examples
 
 #### Implementation Details
-We'll now go over how everything works underneath the hood. The middleware can be thought of being broken up into 2 different implementations, which dictates how the system's participants will interact with each other and must be used together in order for the system to work as intended:
-* Notifier: BrokerNotifierStrategy, SubscriberNotifierStrategy, & PublisherNotifierStrategy
-* Proxy: BrokerProxyStrategy, SubscriberProxyStrategy, & PublisherProxyStrategy
-
-The implementation is dependent on if you use the 'flag=notifier' or 'flag=proxy' command line argument.
+We'll now go over how everything works underneath the hood. 
 
 We will go over each part of the system. The main pattern we use in our middleware is the strategy pattern which you can read more [here](https://refactoring.guru/design-patterns/strategy/python/example)
 
