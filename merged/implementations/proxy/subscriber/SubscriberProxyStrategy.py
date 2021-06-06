@@ -32,7 +32,7 @@ class SubscriberProxyStrategy(SubscriberStrategy):
         while self.__keepRunning:
             sub: ProxySubscriber
             for sub in self.__subscribers:
-                self._log_listen(sub.Topic)
+                # self._log_listen(sub.Topic)
                 sub.receive()
                 count -= 1
                 if count == 0:
