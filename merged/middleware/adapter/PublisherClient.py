@@ -6,9 +6,6 @@ class PublisherClient:
     def __init__(self, strategy: PublisherStrategy):
         self._publisher_strategy: PublisherStrategy = strategy
 
-    def set_strategy(self, strategy: PublisherStrategy):
-        self._publisher_strategy: PublisherStrategy = strategy
-
     def register(self, topics: list[str]) -> None:
         """
         Registers a list of topics with the Publisher.

@@ -1,5 +1,4 @@
 from merged.examples.misc.logger.Logger import Logger
-from merged.examples.misc.value_objects.TopicHandlers import TopicHandler
 from merged.implementations.proxy.subscriber.ProxySubscriber import ProxySubscriber
 from merged.middleware.BrokerInfo import BrokerInfo
 from merged.middleware.handler.MessageHandler import MessageHandler
@@ -21,8 +20,9 @@ class SubscriberProxyStrategy(SubscriberStrategy):
     def unsubscribe(self, topic: str) -> None:
         sub: ProxySubscriber
         for sub in self.__subscribers:
-            sub.close()
-            self.__subscribers.remove(sub)
+            if topic == sub.Topic:
+                sub.close()
+                self.__subscribers.remove(sub)
 
     def subscribe(self, topic: str, handlers: list[MessageHandler]) -> None:
         subscriber = ProxySubscriber(topic, handlers)

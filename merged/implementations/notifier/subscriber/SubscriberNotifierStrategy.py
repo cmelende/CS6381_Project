@@ -3,7 +3,6 @@ import json
 import zmq
 
 from merged.examples.misc.logger.Logger import Logger
-from merged.examples.misc.value_objects.TopicHandlers import TopicHandler
 from merged.implementations.AvailablePublishers import AvailablePublishers
 from merged.implementations.notifier.subscriber.NotifierSubscriber import NotifierSubscriber
 from merged.middleware.BrokerInfo import BrokerInfo
@@ -12,9 +11,8 @@ from merged.middleware.strategy.SubscriberStrategy import SubscriberStrategy
 
 
 class SubscriberNotifierStrategy(SubscriberStrategy):
-    def __init__(self, broker_info: BrokerInfo, logger: Logger, topic_handlers: list[TopicHandler]):
+    def __init__(self, broker_info: BrokerInfo, logger: Logger):
         super().__init__(logger)
-        self.__topic_handlers = topic_handlers
         self.__broker_info = broker_info
         self.__keepRunning = True
         self.__subscribers: list[NotifierSubscriber] = list[NotifierSubscriber]()
@@ -22,8 +20,9 @@ class SubscriberNotifierStrategy(SubscriberStrategy):
     def unsubscribe(self, topic: str) -> None:
         subscriber: NotifierSubscriber
         for subscriber in self.__subscribers:
-            subscriber.close()
-            self.__subscribers.remove(subscriber)
+            if topic == subscriber.Topic:
+                subscriber.close()
+                self.__subscribers.remove(subscriber)
 
     def subscribe(self, topic: str, handlers: list[MessageHandler]) -> None:
         available_publishers = self.get_available_publishers_by_topic(self.__broker_info, topic)
