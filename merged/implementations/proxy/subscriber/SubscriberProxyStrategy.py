@@ -1,5 +1,4 @@
 from merged.examples.misc.logger.Logger import Logger
-from merged.examples.misc.value_objects.TopicHandlers import TopicHandler
 from merged.implementations.proxy.subscriber.ProxySubscriber import ProxySubscriber
 from merged.middleware.BrokerInfo import BrokerInfo
 from merged.middleware.handler.MessageHandler import MessageHandler
@@ -7,7 +6,7 @@ from merged.middleware.strategy.SubscriberStrategy import SubscriberStrategy
 
 
 class SubscriberProxyStrategy(SubscriberStrategy):
-    def __init__(self, broker_info: BrokerInfo, broker_xpub_port: str, logger: Logger, topic_handlers: list[TopicHandler]):
+    def __init__(self, broker_info: BrokerInfo, broker_xpub_port: str, logger: Logger):
         super().__init__(logger)
         self.__broker_xpub_port = broker_xpub_port
         self.__broker_info = broker_info

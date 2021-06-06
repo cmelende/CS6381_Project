@@ -208,8 +208,6 @@ When this implementation is instantiated, it will create a REQ socket and mainta
 ###### Logger
 This is an abstract class that we use to help us log various information (publishing, subscribing, registering) and may not be in the final product
 todo:
-3. SubscriberProxyStrategy, line 11: looks like we can get rid of the topic_handlers constructor parameter. I think this was used on one point but i moved it to the Client code
-4. SubscriberNotifierStrategy, line 17: looks like we can remove self.__topic_handlers as it looks unused
 5. SubscriberNotifierStrategy creates a socket for each call to get_available_publishers_by_topic, we probably need to only set this up once.
 7. SubscriberProxyStrategy - we can probaby copy what SubscriberNotifierStrategy is doing and not wait for each message each subscriber is waiting for.
 8. Higher level issue - in notifier mode, when a publisher signs on, subscribers do not know about new publishers. We can make the notifier mode slower (which may be good for our assignment to show the issues with this approach) by forcing each subscriber to go and ask the broker for the Publishers that publish those topics and connect to the ones that the subscriber doenst know about (which would be any new publishers that have signed on after the subscriber subscribes to a specifieid topic).
