@@ -6,16 +6,12 @@ from merged.middleware.strategy.SubscriberStrategy import SubscriberStrategy
 
 
 class SubscriberProxyStrategy(SubscriberStrategy):
-    def __init__(self, broker_info: BrokerInfo, logger: Logger, topic_handlers: list[TopicHandler]):
+    def __init__(self, broker_info: BrokerInfo, logger: Logger):
         super().__init__(logger)
         self.__broker_xpub_port = broker_info.BrokerPubPort
         self.__broker_info = broker_info
         self.__subscribers: list[ProxySubscriber] = list[ProxySubscriber]()
         self.__keepRunning = True
-
-        # topic_handler: TopicHandler
-        # for topic_handler in topic_handlers:
-        #     self.subscribe(topic_handler.Topic, topic_handler.Handlers)
 
     def unsubscribe(self, topic: str) -> None:
         sub: ProxySubscriber

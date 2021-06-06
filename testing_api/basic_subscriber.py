@@ -22,7 +22,7 @@ class TimerHandler(MessageHandler):
 broker = BrokerInfo(broker_address="127.0.0.1", broker_pub_port=6000)
 
 # select the strategy under which our broker is running (e.g. proxy or notifier)
-strategy = SubscriberProxyStrategy(broker_info=broker, logger=LocalLogger(), topic_handlers=None)
+strategy = SubscriberProxyStrategy(broker_info=broker, logger=LocalLogger())
 
 # create a publisher for the broker...
 subscriber = SubscriberClient(subscriber_strategy=strategy)
