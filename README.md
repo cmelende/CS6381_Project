@@ -208,7 +208,6 @@ When this implementation is instantiated, it will create a REQ socket and mainta
 ###### Logger
 This is an abstract class that we use to help us log various information (publishing, subscribing, registering) and may not be in the final product
 todo:
-1. probably can get rid of set_strategy on the SubcriberClient, i dont think we'll ever need to use this
 2. bug in SubscriberProxyStrategy, line 23, looks like we are subscribing to all subscribers instead of subscribers with just the passed in topic
 3. SubscriberProxyStrategy, line 11: looks like we can get rid of the topic_handlers constructor parameter. I think this was used on one point but i moved it to the Client code
 4. SubscriberNotifierStrategy, line 17: looks like we can remove self.__topic_handlers as it looks unused
