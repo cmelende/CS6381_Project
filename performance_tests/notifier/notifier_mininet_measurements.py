@@ -27,13 +27,12 @@ os.makedirs(d)
 
 broker.cmd(f'export PYTHONPATH={os.environ.get("PYTHONPATH")}')
 pub01.cmd(f'export PYTHONPATH={os.environ.get("PYTHONPATH")}')
-sleep(1)
 sub01.cmd(f'export PYTHONPATH={os.environ.get("PYTHONPATH")}')
 broker.cmd(f'python basic_notifier_cmdline.py -ba {broker.IP()} &')
 pub01.cmd(f'python basic_publisher_notifier_cmdline.py -ba {broker.IP()} -pa {pub01.IP()} &')
-sub01.cmd(f'python basic_subscriber_notifier_cmdline.py -d {d} -n sub01 -ba {broker.IP()}')
+sub01.cmd(f'python basic_subscriber_notifier_cmdline.py -d {d} -n sub01 -ba {broker.IP()} &')
 
-CLI(net)
+# CLI(net)
 print("sleeping....")
 for i in range(100):
     net.pingAll(5)
