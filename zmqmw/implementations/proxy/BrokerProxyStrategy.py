@@ -15,6 +15,7 @@ class BrokerProxyStrategy(BrokerStrategy):
         :param logger: An optional Log object that implements `zmqmw.base_classes.Logger`
         """
 
+        super().__init__(logger)
         self.__logger = logger
         self.__isRunning = True
         self.__context = zmq.Context().instance()

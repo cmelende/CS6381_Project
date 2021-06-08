@@ -11,9 +11,6 @@ class SubscriberClient:
         """
         self._subscriber_strategy: SubscriberStrategy = subscriber_strategy
 
-    def set_strategy(self, subscriber_strategy: SubscriberStrategy):
-        self._subscriber_strategy = subscriber_strategy
-
     def subscribe(self, topic: str, handlers: list[MessageHandler]) -> None:
         """
         Subscribe to a topic and specify how to handle the events from said topic.

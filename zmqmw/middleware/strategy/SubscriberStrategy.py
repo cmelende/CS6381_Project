@@ -24,7 +24,7 @@ class SubscriberStrategy(ABC):
     @abstractmethod
     def close(self) -> None: pass
 
-    def _log_subscription(self, address: str, port: str, topic: str, handlers: list[MessageHandler]):
+    def _log_subscription(self, address: str, port: int, topic: str, handlers: list[MessageHandler]):
         handler_names = self.__get_message_handler_names(handlers)
         self._logger.log(f'Subscribing to {topic} at {address}:{port} '
                          f'with handlers {",".join(map(str, handler_names))}')

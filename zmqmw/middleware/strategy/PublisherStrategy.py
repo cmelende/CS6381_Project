@@ -19,7 +19,7 @@ class PublisherStrategy(ABC):
     def close(self):
         pass
 
-    def _log_registration(self, address: str, port: str, topics: list[str], obj):
+    def _log_registration(self, address: str, port: int, topics: list[str], obj):
         self._logger.log(
             f'Registering {type(obj).__name__} to url:'
             f' {address}:{port}'

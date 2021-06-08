@@ -34,7 +34,7 @@ class PublisherNotifierStrategy(PublisherStrategy):
             pub.Publisher.close()
         self.__ctx.term()
 
-    def __create_publisher(self, topics: list[str], publisher_port: str) -> None:
+    def __create_publisher(self, topics: list[str], publisher_port: int) -> None:
         publisher = NotifierPublisher()
         publisher.connect(self.__publisher_info.PublisherAddress, publisher_port)
         self._log_registration(self.__publisher_info.PublisherAddress, publisher_port, topics, publisher)
@@ -42,7 +42,7 @@ class PublisherNotifierStrategy(PublisherStrategy):
         topics_pub_pair = TopicsNotifierPublisherPair(topics, publisher)
         self.__topics_publisher_pairs.append(topics_pub_pair)
 
-    def __notify_broker_of_publisher(self, topics: list[str], publisher_port: str) -> None:
+    def __notify_broker_of_publisher(self, topics: list[str], publisher_port: int) -> None:
         request_socket = self.__ctx.socket(zmq.REQ)
 
         url = f'{self.__broker_info.BrokerAddress}:{self.__broker_info.BrokerSubPort}'

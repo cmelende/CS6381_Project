@@ -11,7 +11,7 @@ class ProxySubscriber:
         self._keep_running = True
         self.__message_handlers: list[MessageHandler] = handlers
 
-    def connect(self, broker_address: str, broker_port: str):
+    def connect(self, broker_address: str, broker_port: int):
         self._subscriber_socket.connect(f'tcp://{broker_address}:{broker_port}')
         self._subscriber_socket.setsockopt_string(zmq.SUBSCRIBE, self.Topic)
 
