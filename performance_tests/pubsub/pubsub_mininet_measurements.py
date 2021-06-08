@@ -48,7 +48,7 @@ def run_test(args):
     print("sleeping....")
     for i in range(200):
         net.pingAll(5)
-        sleep(6)
+        sleep(5)
 
     print("Done.")
     net.stop()

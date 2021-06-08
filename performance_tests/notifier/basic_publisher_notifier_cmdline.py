@@ -30,10 +30,10 @@ def main(args):
     publisher.register(topics=['timer'])
 
     try:
-        for i in range(100):
+        while True:
             # publish!
             publisher.publish(topic='timer', val=f"{str(uuid4())}:{str(time())}")
-            sleep(1)
+            sleep(0.250)
     except KeyboardInterrupt:
         publisher.close()
 
