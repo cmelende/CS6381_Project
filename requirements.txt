@@ -1,3 +1,6 @@
 pyzmq
 mininet
 matplotlib
+numpy
+seaborn
+pandas
