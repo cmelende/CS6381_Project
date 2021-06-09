@@ -29,6 +29,3 @@ class TestPublisherClient(unittest.TestCase):
 
         self.assertEqual(close_call_count, 1)
 
-
-if __name__ == '__main__':
-    unittest.main()

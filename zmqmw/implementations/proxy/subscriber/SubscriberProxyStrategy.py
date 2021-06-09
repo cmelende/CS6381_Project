@@ -1,4 +1,4 @@
-from zmqmw.examples.misc.logger.Logger import Logger
+from zmqmw.base_classes.Logger import Logger
 from zmqmw.implementations.proxy.subscriber.ProxySubscriber import ProxySubscriber
 from zmqmw.middleware.BrokerInfo import BrokerInfo
 from zmqmw.middleware.handler.MessageHandler import MessageHandler
@@ -6,7 +6,7 @@ from zmqmw.middleware.strategy.SubscriberStrategy import SubscriberStrategy
 
 
 class SubscriberProxyStrategy(SubscriberStrategy):
-    def __init__(self, broker_info: BrokerInfo, logger: Logger):
+    def __init__(self, broker_info: BrokerInfo, logger: Logger=Logger()):
         super().__init__(logger)
         self.__broker_xpub_port = broker_info.BrokerPubPort
         self.__broker_info = broker_info

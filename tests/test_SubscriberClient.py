@@ -21,6 +21,3 @@ class TestSubscriberClient(unittest.TestCase):
 
         self.assertEqual(unsubscribe_call_count, 1)
 
-
-if __name__ == '__main__':
-    unittest.main()
