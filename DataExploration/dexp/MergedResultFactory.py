@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 
+from DataExploration.dexp import DataframeUtils, UniVariateAnalysis
+
 
 class MergedResultFactory:
     def __init__(self, notifier_dfs: list[pd.DataFrame], pub_sub_dfs: list[pd.DataFrame]):
@@ -11,16 +13,7 @@ class MergedResultFactory:
 
     @staticmethod
     def __flatten_df(dataframe: pd.DataFrame) -> pd.Series:
-        values = []
-        dataframe_columns = list(dataframe)
-        counter = 0
-        number_of_rows = dataframe.shape[0]
-        while counter < number_of_rows:
-            for col in dataframe_columns:
-                values.append(dataframe[col][counter])
-                # print(df[col][counter])
-            counter = counter + 1
-        return pd.Series(values)
+        return DataframeUtils.flatten_df(dataframe)
 
     @staticmethod
     def __create_value_sub_count_type_df(index: int, flattened_df_series: pd.Series, type: str):
@@ -31,8 +24,8 @@ class MergedResultFactory:
         count_column: list[int] = [flattened_df_series_sub_count] * flattened_df_series_count
         type_column: list[str] = [type] * flattened_df_series_count
         t = {
-            'values': flattened_df_series,
-            'sub_count': pd.Series(count_column),
+            'latency': flattened_df_series,
+            'subscriber_count': pd.Series(count_column),
             'type': pd.Series(type_column)
         }
         t_df = pd.DataFrame(t)
