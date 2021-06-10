@@ -3,7 +3,7 @@ from hashlib import sha1
 
 import zmq
 
-from zmqmw.examples.misc.logger.Logger import Logger
+from zmqmw.base_classes.Logger import Logger
 from zmqmw.middleware.strategy.BrokerStrategy import BrokerStrategy
 
 

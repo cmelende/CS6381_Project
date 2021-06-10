@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from zmqmw.examples.misc.logger.Logger import Logger
+from zmqmw.base_classes.Logger import Logger
 
 
 class PublisherStrategy(ABC):

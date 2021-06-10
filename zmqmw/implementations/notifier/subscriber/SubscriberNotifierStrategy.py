@@ -2,7 +2,7 @@ import json
 
 import zmq
 
-from zmqmw.examples.misc.logger.Logger import Logger
+from zmqmw.base_classes.Logger import Logger
 from zmqmw.implementations.AvailablePublishers import AvailablePublishers
 from zmqmw.implementations.notifier.subscriber.NotifierSubscriber import NotifierSubscriber
 from zmqmw.middleware.BrokerInfo import BrokerInfo

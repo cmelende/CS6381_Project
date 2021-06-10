@@ -1,7 +1,8 @@
 # CS6381_Project
 ###### Authors: Cory &amp; Sam's CS6381 Project
 
-
+## NOTE TO GRADERS
+Please see [GRADERS.md](https://github.com/cmelende/CS6381_Project/blob/main/GRADERS.md) for helpful notes.
 ## Documentation
 
 This repository contains middleware built on top of 0MQ's pyzmq library. The middleware's aim is to provide a unified API for two different types of brokers in a pub/sub architecture. Namely:
@@ -134,15 +135,6 @@ strategy = SubscriberNotifierStrategy(broker_info=broker, logger=LocalLogger())
 # create a publisher for the broker...
 subscriber = SubscriberClient(subscriber_strategy=strategy)
 ```
-
-## Advanced Examples
-For the advanced examples we provide, it is important to note that we are using a few helper classes in order to setup our middleware a little easier, but these can be defined by the application code developers and are not required:
-* App - this program is responsible for parsing the value of the command line arguments. It looks only for the --flag command line argument which dictates what mode we should run the Broker, Publisher, Or Subscriber middleware in.
-* BrokerApp - inherits off of App, this class is responsible for creating the BrokerStrategy object, which will dictate what behaviour the Broker will exhibit
-* PublisherApp - inherits off of App, this class is responsible for creating the PublisherStrategy object, which will dictate what behaviour the Publishers exhibit
-* SubscriberApp - inherits off of App, this class is responsible for creating the SubscriberStrategy object, which will dictate what behaviour the Subscribers exhibit
-
-These examples can be found in zmqmw/examples
 
 ## Implementation Details
 We will go over each part of the system. The main pattern we use in our middleware is the strategy pattern which you can read more [here](https://refactoring.guru/design-patterns/strategy/python/example).  We chose this pattern because as we expand the framework, the implementation details are abstracted from the user and can be interchanged relatively easily. You can see a UML diagram of how design in the following figure representing the `BrokerStrategy` object.
