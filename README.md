@@ -1,57 +1,72 @@
 # CS6381_Project
 ###### Authors: Cory &amp; Sam's CS6381 Project
-</br>
+
 
 ## Documentation
 
-This repository contains middleware built on top of 0MQ's pyzmq library. The middleware's aim is to provide a unified API for two different types of brokers in a pub/sub architecture.
+This repository contains middleware built on top of 0MQ's pyzmq library. The middleware's aim is to provide a unified API for two different types of brokers in a pub/sub architecture. Namely:
+- A broker acting as aproxy
+- A broker acting as `notifier` whereby Publishers can register and Subscribers can get a list of publishers to whom they could subscribe directly.
 
 ### Terms and Definitions
 
-##### Message
-These are considered the 'payload' for communication between Publishers and Subscribers, in the real world, these can either be bytes, strings, or strings that contain json objects that are later deserialized into in-memory objects.
-
-##### Topic
-Strings that are assigned to each message that tells the Publisher or Subscriber what type of message it is. For Publishers, they are important in order to let the middleware know what types of messages they publish. For Subscribers, these are important to notify the middleware which messages they should receive.
-
-##### Subscriber 
-These are the receivers in the pub/sub architecture, they receive messages from Publishers directly or indirectly from a broker. Subscribers will only receive messages directly from publishers if you choose to run the middleware in the Notifier Mode, otherwise, Subscribers will receive messages from the broker in Proxy Mode.
-
-##### Publisher 
-These are the entities that send messages in the publisher/subscriber architecture, in our middleware they send messages either directly or indirectly to Subscribers, depending on if you are using Notifier Mode or Proxy Mode, respectively.  
-
-##### Broker
-This middleware has two implementations of a broker, a broker that can run in Notifier Mode and a broker that can run in Proxy Mode, we will explain the differences later in this document but for now know that the broker in either mode assists in routing published messages from Publishers to Subscribers that are subscribed to those topics.
-
-##### Client
-This is just a term for any application code that either utilizes the Publisher or Subscriber middleware of this project. The application code will handle the sending and receiving of messages through an abstraction (see 'Implementation Details' for info) without necessarily having to know about which implementation of the broker is being used.
-
-##### Mode 
-Refers to the which implementation, Proxy or Notifier, is being used. There is a command line argument, --flag, that determines this (see 'API & Usages' section).
+* Message: These are considered the 'payload' for communication between Publishers and Subscribers, in the real world, these can either be bytes, strings, or (serialized) json objects that are later deserialized into in-memory objects.
+* Topic: Strings that are assigned to each message that tells the Publisher or Subscriber what type of message it is. For Publishers, they are important in order to let the middleware know what types of messages they publish. For Subscribers, these are important to notify the middleware which messages they should receive.
+* Subscriber: These are the receivers in the pub/sub architecture, they receive messages from Publishers directly or indirectly from a broker. Subscribers will only receive messages directly from publishers if you choose to run the middleware in the Notifier Mode, otherwise, Subscribers will receive messages from the broker in Proxy Mode.
+* Publisher: These are the entities that send messages in the publisher/subscriber architecture, in our middleware they send messages either directly or indirectly to Subscribers, depending on if you are using Notifier Mode or Proxy Mode, respectively.  
+* Broker: This middleware has two implementations of a broker, a broker that can run in Notifier Mode and a broker that can run in Proxy Mode. We will explain the differences later in this document but for now know that the broker in either mode assists in routing published messages from Publishers to Subscribers that are subscribed to those topics.
+* Client: This is just a term for any application code that either utilizes the Publisher or Subscriber middleware of this project. The application code will handle the sending and receiving of messages through an abstraction (see 'Implementation Details' for info) without necessarily having to know about which implementation of the broker is being used.
+* Mode: Refers to which implementation, Proxy or Notifier, is being used. There is a command line argument.
 
 ##### Notifier Mode
-This implementation is used when --flag=notifier is passed in via the command line argument. This implementation allows Publishers to directly communicate to Subscribers via a broker, where the broker notifies Subscribers which Publishers to connect to to receive messages.
+In the `Notifier Mode`, the Broker listens for Publisher's to register metadata about themselves (ip address, port, topics). When a Subscriber requests a list of publishers, the broker returns those data. With this data in-hand, a subscriber can directly contact the Publisher and subscribe.
 
 ##### Proxy Mode
-This implementation is used when --flag=proxy is passed in via the command line argument. This implementation allows for Publishers to publish messages without knowing about which Subscribers are subscribed to those messages and vice versa with Subscribers. When a Publisher publishes a message, it will relay it through a proxy (see 'Implementation Details' for more info) which knows and determines which subscriber to send the message to. 
+In this mode, a `Publisher` publishes messages through the broker and a `Subscriber` subscribes through the broker. In this way, both Subscriber and Publisher remain anonymous to each other and the broker is handles proxying the data between interested parties.
 
 #### API & Usages
-We'll now go over how to interact with this sytem. The middleware is designed to be used by three different types of programs: 
-* A broker program that shouldnt need any application code beside what is provided by our middleware
+We'll now go over how to interact with this system. The middleware is designed to be used by three different types of programs: 
+* A broker program that should not need any application code beside what is provided by our middleware
 * A subscriber program that can have additional application code besides what our middleware provides
 * A publisher program that can also have additional application code besides what our middleware provides
 
-##### Creating Clients (note these may change due to todo # 10)
-The client is the main class in our API that you can interact with. In our examples we have some other helper classes that take care of this setup to reduce the amount of code, but they are not required.
+##### Creating Clients
+The client is the main class in our API with which you will interact. Basic examples can be found in the `testing_api` directory to get a sense of quickly utilizing the library and more sophisticated examples in the `zmqmw/examples` directory.
 
-The middleware can be thought of being broken up into 2 different implementations, which dictates how the system's participants will interact with each other and must be used together in order for the system to work as intended:
+The middleware can be thought of being broken up into two different implementations, which dictates how the system's participants will interact with each other and must be used together in order for the system to work as intended:
 * Notifier: BrokerNotifierStrategy, SubscriberNotifierStrategy, & PublisherNotifierStrategy -  this facilitates communication between subscribers and publishers directly.
-* Proxy: BrokerProxyStrategy, SubscriberProxyStrategy, & PublisherProxyStrategy -  this facilitate communication between subscribers and publishers be decoupled, where messages are routed purely through a broker
+* Proxy: BrokerProxyStrategy, SubscriberProxyStrategy, & PublisherProxyStrategy -  this facilitates communication between subscribers and publishers be decoupled, where messages are routed purely through a broker
 
-The implementation is dependent on if you use the 'flag=notifier' or 'flag=proxy' command line argument.
+An example of creating a Client may look like the following code snippet.
+```
+# notify the code where our broker lives...
+broker = BrokerInfo(broker_address="127.0.0.1", broker_sub_port=6000)
+
+pub_info = PublisherInfo(publisher_address='127.0.0.1', publisher_port=7000)
+
+# select the strategy under which our broker is running (e.g. proxy or notifier)
+strategy = PublisherNotifierStrategy(broker_info=broker, publisher_info=pub_info, logger=LocalLogger())
+
+# create a publisher for the broker...
+publisher = PublisherClient(strategy=strategy)
+```
 
 ###### BrokerClient
-To create a broker client, all that is needed is to instantiate either a BrokerNotifierStrategy or a BrokerProxyStrategy and pass it into the BrokerClient
+To create a broker client, all that is needed is to instantiate either a BrokerNotifierStrategy or a BrokerProxyStrategy and pass it into the BrokerClient. 
+
+An example of creating a BrokerClient acting as a Proxy can be seen in the following snippet.
+The parameters are:
+- broker_address: address of the broker (localhost default)
+- broker_xpub_port: the port which subscribers should hit
+- broker_xsup_port: the port which publishers should hit
+- logger: an optional parameter that takes in a Logger object (subclassed from `zmqmw.base_classes`) for your problem-dependent logging needs.
+```
+broker = BrokerProxyStrategy(broker_address="127.0.0.1",
+                             broker_xpub_port=6000,
+                             broker_xsub_port=7000,
+                             logger=PrintLogger())
+proxy = BrokerClient(broker)
+```
 ```
 # creating a BrokerClient that behaves under Proxy Mode
 # the first argument passed into the proxy strategy is the port in which the broker will attach to
